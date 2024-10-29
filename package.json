@@ -10,7 +10,14 @@
     "format": "prettier --write 'src/**/*.{ts,js,json,md}'",
     "services:up": "docker-compose -f src/infra/compose.yaml up -d",
     "services:stop": "docker-compose -f src/infra/compose.yaml stop",
-    "services:down": "docker-compose -f src/infra/compose.yaml down"
+    "services:down": "docker-compose -f src/infra/compose.yaml down",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "typeorm:sync": "npm run typeorm schema:sync",
+    "typeorm:drop": "npm run typeorm schema:drop",
+    "typeorm:reset": "npm run typeorm:drop && npm run typeorm:sync",
+    "typeorm:migrate": "env NODE_ENV=development npm run typeorm migration:generate -- -n",
+    "typeorm:create": "env NODE_ENV=development npm run typeorm migration:create -- -n",
+    "typeorm:run": "ts-node -r tsconfig-paths/register $(yarn bin typeorm) migration:run"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +34,7 @@
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.6.3"
   },
   "dependencies": {
