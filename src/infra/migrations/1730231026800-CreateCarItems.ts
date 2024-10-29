@@ -1,11 +1,45 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
 
 export class CreateCarItems1730231026800 implements MigrationInterface {
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-    }
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.createTable(
+      new Table({
+        name: 'car_item',
+        columns: [
+          {
+            name: 'id',
+            type: 'varchar',
+            length: '36',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+          },
+          {
+            name: 'car_id',
+            type: 'varchar',
+            length: '36',
+          },
+          {
+            name: 'name',
+            type: 'varchar',
+            length: '255',
+          },
+        ],
+      }),
+    );
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
+    await queryRunner.createForeignKey(
+      "car_item",
+      new TableForeignKey({
+          columnNames: ["car_id"],
+          referencedColumnNames: ["id"],
+          referencedTableName: "car",
+          onDelete: "CASCADE",
+      }),
+    )
+  }
 
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropTable('orders');
+  }
 }
