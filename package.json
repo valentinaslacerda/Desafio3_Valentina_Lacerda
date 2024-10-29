@@ -5,6 +5,9 @@
   "main": "index.ts",
   "scripts": {
     "dev": "npm run services:up && nodemon --exec ts-node ./src/index.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write 'src/**/*.{ts,js,json,md}'",
     "services:up": "docker-compose -f src/infra/compose.yaml up -d",
     "services:stop": "docker-compose -f src/infra/compose.yaml stop",
     "services:down": "docker-compose -f src/infra/compose.yaml down"
@@ -16,6 +19,11 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.8.2",
+    "@typescript-eslint/eslint-plugin": "^8.12.2",
+    "@typescript-eslint/parser": "^8.12.2",
+    "eslint": "^9.13.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
     "ts-node": "^10.9.2",
