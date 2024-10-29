@@ -13,5 +13,5 @@ export const AppDataSource = new DataSource({
   database: process.env.MYSQL_DATABASE,
   synchronize: false,
   logging: true,
-  migrations: ['src/migrations/*.ts'],
+  migrations: ['src/infra/migrations/*.ts'],
 });
