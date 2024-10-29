@@ -17,7 +17,9 @@
     "typeorm:reset": "npm run typeorm:drop && npm run typeorm:sync",
     "typeorm:migrate": "env NODE_ENV=development npm run typeorm migration:generate -- -n",
     "typeorm:create": "env NODE_ENV=development npm run typeorm migration:create -- -n",
-    "typeorm:run": "ts-node -r tsconfig-paths/register $(yarn bin typeorm) migration:run"
+    "typeorm:run": "ts-node -r tsconfig-paths/register $(yarn bin typeorm) migration:run",
+    "migration:run": "npm run typeorm migration:run -- -d ./src/infra/data-source.ts"
+
   },
   "keywords": [],
   "author": "",
