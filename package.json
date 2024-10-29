@@ -1,0 +1,32 @@
+{
+  "name": "aws_node_set24_desafio_02_node_com_pimenta",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "npm run services:up && nodemon --exec ts-node ./src/index.ts",
+    "services:up": "docker-compose -f src/infra/compose.yaml up -d",
+    "services:stop": "docker-compose -f src/infra/compose.yaml stop",
+    "services:down": "docker-compose -f src/infra/compose.yaml down"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.8.2",
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "mysql2": "^3.11.3",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.20"
+  }
+}
