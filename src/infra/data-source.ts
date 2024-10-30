@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-
 const PORT_DB = process.env.MYSQL_PORT as number | undefined;
 
 export const AppDataSource = new DataSource({
@@ -14,4 +13,5 @@ export const AppDataSource = new DataSource({
   synchronize: false,
   logging: true,
   migrations: ['src/infra/migrations/*.ts'],
+  entities: ['src/infra/entities/*.ts'],
 });
