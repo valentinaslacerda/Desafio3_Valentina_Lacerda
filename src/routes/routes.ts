@@ -1,8 +1,8 @@
 import { Router } from 'express';
-const UserController = require('../controller/UserController');
+const UserController = require('../http/controller/UserController');
 
 const routes = Router();
 
-routes.get('/', UserController.index);
+routes.get('/user', UserController.index);
 
 export default routes;
