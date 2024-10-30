@@ -1,5 +1,5 @@
-import { ClientsRepository } from '../infra/repositories/ClientsRepository';
-import { Client } from '../infra/entities/Client';
+import { ClientsRepository } from '../../domain/repositories/ClientsRepository';
+import { Client } from '../../domain/entities/Client';
 
 interface ICreateClient {
   name: string;
