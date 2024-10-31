@@ -12,7 +12,7 @@ import { Car } from './Car';
 @Entity('orders')
 export class Order {
   @PrimaryGeneratedColumn('uuid')
-  id!: string;
+  id: string;
 
   @ManyToOne(() => Car)
   @JoinColumn({ name: 'car_id' })
@@ -42,7 +42,7 @@ export class Order {
   totalValue: number;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date | null;
+  createdAt: Date;
 
   @Column({ name: 'final_date', type: 'timestamp', nullable: true })
   finalDate: Date;
