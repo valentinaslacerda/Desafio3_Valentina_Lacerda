@@ -1,0 +1,55 @@
+import { CarsRepository } from '../../../domain/repositories/CarsRepository';
+import Car from '../../../domain/entities/Car';
+import { CreateCarDTO } from '../../../http/dtos/CreateCar.dto';
+
+export class CreateCarService {
+  private CarsRepository: CarsRepository;
+
+  constructor(CarsRepository: CarsRepository) {
+    this.CarsRepository = CarsRepository;
+  }
+
+  public async execute({
+    plate,
+    brand,
+    model,
+    km,
+    year,
+    price,
+    status,
+  }: CreateCarDTO): Promise<Car> {
+    status = status.toLowerCase().trim();
+
+    // TODO: Items
+
+    // Plate validation
+    const regexPlate = /^[a-zA-Z]{3}[0-9]{4}$/;
+    const regexPlateMercosul = /^[a-zA-Z]{3}[0-9]{1}[a-zA-Z]{1}[0-9]{2}$/;
+
+    if (!regexPlate.test(plate) && !regexPlateMercosul.test(plate)) {
+      throw new Error("Placa inválida.");
+    }
+
+    if (km < 0) throw new Error("A quilometragem do carro não pode ser negativa.");
+    if (price < 0) throw new Error("O preço do carro não pode ser negativa.");
+    if (year < 2014) throw new Error("O carro não pode ter mais de 11 anos.");
+
+    // Status validation
+    if (!["ativo", "inativo"].includes(status)) 
+      throw new Error('O status do carro deve ser um dos seguintes: "ativo" ou "inativo".');
+
+    const car = this.CarsRepository.create({
+      plate,
+      brand,
+      model,
+      km,
+      year,
+      price,
+      status,
+    });
+
+    return car;
+  }
+}
+
+export default CreateCarService;
