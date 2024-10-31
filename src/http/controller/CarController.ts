@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import CarsRepository from '../../domain/repositories/CarsRepository';
 import CreateCarService from '../../application/services/Car/CreateCarService';
 import ShowCarService from '../../application/services/Car/ShowCarService';
+import DeleteCarService from '../../application/services/Car/DeleteCarService';
 
 class CarController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -37,6 +38,26 @@ class CarController {
       const car = await showCar.execute(id);
 
       return res.json(car);
+    }
+    catch (err) {
+      if (err instanceof Error)
+        return res.json({ error: err.message });
+
+      return res.json({ error: 'Um erro inesperado aconteceu.' });
+    }
+  }
+
+  public async delete(req: Request, res: Response): Promise<Response> {
+    try{  
+      const id = req.params.id;
+
+      const carsRepository = new CarsRepository();
+
+      const deleteCar = new DeleteCarService(carsRepository);
+
+      await deleteCar.execute(id);
+
+      return res.sendStatus(204);
     }
     catch (err) {
       if (err instanceof Error)
