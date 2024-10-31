@@ -30,13 +30,13 @@ export class Order {
   status: string;
 
   @Column({ type: 'varchar', length: 10, nullable: true })
-  cep: string;
+  cep: string | null;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
-  city: string;
+  city: string | null;
 
   @Column({ type: 'varchar', length: 2, nullable: true })
-  state: string;
+  state: string | null;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   totalValue: number;
@@ -45,8 +45,8 @@ export class Order {
   createdAt: Date;
 
   @Column({ name: 'final_date', type: 'timestamp', nullable: true })
-  finalDate: Date;
+  finalDate: Date | null;
 
   @Column({ name: 'cancellation_date', type: 'timestamp', nullable: true })
-  cancellationDate: Date;
+  cancellationDate: Date | null;
 }
