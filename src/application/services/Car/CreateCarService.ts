@@ -21,15 +21,7 @@ export class CreateCarService {
   }: CreateCarDTO): Promise<Car> {
     status = status.toLowerCase().trim();
 
-    // TODO: Items
-
-    // Plate validation
-    const regexPlate = /^[a-zA-Z]{3}[0-9]{4}$/;
-    const regexPlateMercosul = /^[a-zA-Z]{3}[0-9]{1}[a-zA-Z]{1}[0-9]{2}$/;
-
-    if (!regexPlate.test(plate) && !regexPlateMercosul.test(plate)) {
-      throw new Error("Placa inválida.");
-    }
+    const unique_items = [...new Set(items)].slice(0, 5);
 
     if (km < 0) throw new Error("A quilometragem do carro não pode ser negativa.");
     if (price < 0) throw new Error("O preço do carro não pode ser negativa.");
@@ -39,6 +31,17 @@ export class CreateCarService {
     if (!["ativo", "inativo"].includes(status)) 
       throw new Error("O status do carro deve ser um dos seguintes: 'ativo' ou 'inativo'.");
 
+    // Plate validation
+    const regexPlate = /^[a-zA-Z]{3}[0-9]{4}$/;
+    const regexPlateMercosul = /^[a-zA-Z]{3}[0-9]{1}[a-zA-Z]{1}[0-9]{2}$/;
+
+    if (!regexPlate.test(plate) && !regexPlateMercosul.test(plate)) {
+      throw new Error("Placa inválida.");
+    }
+    
+    if (await this.CarsRepository.findByPlate(plate))
+      throw new Error("Já existe um carro no sistema com a placa informada.");
+
     const car = this.CarsRepository.create({
       plate,
       brand,
@@ -47,7 +50,7 @@ export class CreateCarService {
       year,
       price,
       status,
-      items
+      items: unique_items
     });
 
     return car;

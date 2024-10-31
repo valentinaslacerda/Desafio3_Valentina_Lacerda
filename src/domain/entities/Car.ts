@@ -34,7 +34,7 @@ export class Car {
   @Column({ type: 'varchar', length: 8 })
   status: string | null;
 
-  @OneToMany(() => CarItem, (item) => item.car )
+  @OneToMany(() => CarItem, (item) => item.car, { cascade: ['insert'] })
   items: CarItem[];
 
   @CreateDateColumn({ name: 'created_at' })

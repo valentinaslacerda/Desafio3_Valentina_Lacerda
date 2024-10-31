@@ -45,6 +45,10 @@ export class CarsRepository {
     return this.ormRepository.findOne({ where: { id }, relations: ['items'] });
   }
 
+  public async findByPlate(plate: string): Promise<Car | null> {
+    return this.ormRepository.findOne({ where: { plate }, relations: ['items'] });
+  }
+
   public async findAll(page: number, limit: number) { // TODO: interface for return value
     const skip = (page - 1) * limit;
     const [ cars, count ] = await this.ormRepository.createQueryBuilder().skip(skip).take(limit).getManyAndCount();
