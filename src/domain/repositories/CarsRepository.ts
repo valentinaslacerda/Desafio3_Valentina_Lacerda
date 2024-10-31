@@ -1,16 +1,7 @@
 import { Repository } from 'typeorm';
 import Car from '../entities/Car';
 import { AppDataSource } from '../../infra/data-source';
-
-export interface ICreateCar {
-  plate: string;
-  brand: string;
-  model: string;
-  km: number;
-  year: number;
-  price: number;
-  status: string;
-}
+import { CreateCarDTO } from '../../http/dtos/CreateCar.dto';
 
 export class CarsRepository {
   private ormRepository: Repository<Car>;
@@ -27,7 +18,7 @@ export class CarsRepository {
     year,
     price,
     status,
-  }: ICreateCar): Promise<Car> {
+  }: CreateCarDTO): Promise<Car> {
     const car = this.ormRepository.create({plate, brand, model, km, year, price, status});
 
     await this.ormRepository.save(car);
@@ -41,8 +32,26 @@ export class CarsRepository {
     return car;
   }
 
+  public async remove(car: Car): Promise<void> {
+    car.deletedAt = new Date();
+    car.status = "excluído";
+    await this.ormRepository.save(car);
+  }
+
   public async findById(id: string): Promise<Car | null> {
     return this.ormRepository.findOne({ where: { id } });
+  }
+
+  public async findAll(page: number, limit: number) { // TODO: interface for return value
+    const skip = (page - 1) * limit;
+    const [ cars, count ] = await this.ormRepository.createQueryBuilder().skip(skip).take(limit).getManyAndCount();
+
+    return {
+      per_page: limit,
+      total: count,
+      current_page: page,
+      data: cars
+    }
   }
 }
 
