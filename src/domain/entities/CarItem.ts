@@ -14,7 +14,7 @@ export class CarItem {
   @Column({ type: 'varchar', length: 255 })
   name: string | null;
 
-  @ManyToOne(() => Car, (car: Car) => car.items)
+  @ManyToOne(() => Car, (car: Car) => car.items, { eager:true, orphanedRowAction: 'delete' })
   car: Car;
 }
 

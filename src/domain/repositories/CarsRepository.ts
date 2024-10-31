@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 import Car from '../entities/Car';
 import { AppDataSource } from '../../infra/data-source';
 import { CreateCarDTO } from '../../http/dtos/CreateCar.dto';
+import { UpdateCarDTO } from '../../http/dtos/UpdateCar.dto';
 
 export class CarsRepository {
   private ormRepository: Repository<Car>;
@@ -21,10 +22,30 @@ export class CarsRepository {
     items,
   }: CreateCarDTO): Promise<Car> {
     const car_items = items.map(item => { return { name: item } });
-    
+
     const car = this.ormRepository.create({ plate, brand, model, km, year, price, status, items: car_items });
 
     await this.ormRepository.save(car);
+
+    return car;
+  }
+
+  public async update(car: Car, {
+    plate,
+    brand,
+    model,
+    km,
+    year,
+    price,
+    status,
+    items,
+  }: UpdateCarDTO): Promise<Car> {
+    const car_items = items?.map(item => { return { name: item } });
+
+    await this.ormRepository.update({ id: car.id! }, { plate, brand, model, km, year, price, status });
+
+    if (items && items.length > 0)
+      await this.ormRepository.save({ id: car.id, items: car_items });
 
     return car;
   }
@@ -51,7 +72,7 @@ export class CarsRepository {
 
   public async findAll(page: number, limit: number) { // TODO: interface for return value
     const skip = (page - 1) * limit;
-    const [ cars, count ] = await this.ormRepository.createQueryBuilder().skip(skip).take(limit).getManyAndCount();
+    const [cars, count] = await this.ormRepository.createQueryBuilder().skip(skip).take(limit).getManyAndCount();
 
     return {
       per_page: limit,
