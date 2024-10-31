@@ -42,7 +42,7 @@ export class CarsRepository {
   }
 
   public async findById(id: string): Promise<Car | null> {
-    return this.ormRepository.findOne({ where: { id } });
+    return this.ormRepository.findOne({ where: { id }, relations: ['items'] });
   }
 
   public async findAll(page: number, limit: number) { // TODO: interface for return value

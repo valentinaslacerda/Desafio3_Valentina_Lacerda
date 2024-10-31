@@ -4,7 +4,7 @@ import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
-  OneToMany,
+  OneToMany
 } from 'typeorm';
 import CarItem from './CarItem';
 
@@ -34,7 +34,7 @@ export class Car {
   @Column({ type: 'varchar', length: 8 })
   status: string | null;
 
-  @OneToMany(() => CarItem, (item) => item.car,{ cascade: ['insert'] })
+  @OneToMany(() => CarItem, (item) => item.car )
   items: CarItem[];
 
   @CreateDateColumn({ name: 'created_at' })
