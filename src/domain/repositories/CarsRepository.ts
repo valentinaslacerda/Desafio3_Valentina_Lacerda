@@ -18,8 +18,11 @@ export class CarsRepository {
     year,
     price,
     status,
+    items,
   }: CreateCarDTO): Promise<Car> {
-    const car = this.ormRepository.create({plate, brand, model, km, year, price, status});
+    const car_items = items.map(item => { return { name: item } });
+    
+    const car = this.ormRepository.create({ plate, brand, model, km, year, price, status, items: car_items });
 
     await this.ormRepository.save(car);
 

@@ -17,6 +17,7 @@ export class CreateCarService {
     year,
     price,
     status,
+    items,
   }: CreateCarDTO): Promise<Car> {
     status = status.toLowerCase().trim();
 
@@ -36,7 +37,7 @@ export class CreateCarService {
 
     // Status validation
     if (!["ativo", "inativo"].includes(status)) 
-      throw new Error('O status do carro deve ser um dos seguintes: "ativo" ou "inativo".');
+      throw new Error("O status do carro deve ser um dos seguintes: 'ativo' ou 'inativo'.");
 
     const car = this.CarsRepository.create({
       plate,
@@ -46,6 +47,7 @@ export class CreateCarService {
       year,
       price,
       status,
+      items
     });
 
     return car;

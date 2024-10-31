@@ -6,14 +6,14 @@ import ShowCarService from '../../application/services/Car/ShowCarService';
 class CarController {
   public async create(req: Request, res: Response): Promise<Response> {
     try {
-      const { plate, brand, model, km, year, price, status } = req.body;
+      const { plate, brand, model, km, year, price, status, items } = req.body;
 
       const carsRepository = new CarsRepository();
 
       const createCar = new CreateCarService(carsRepository);
 
       const car = await createCar.execute({
-        plate, brand, model, km, year, price, status
+        plate, brand, model, km, year, price, status, items
       });
 
       return res.json(car);

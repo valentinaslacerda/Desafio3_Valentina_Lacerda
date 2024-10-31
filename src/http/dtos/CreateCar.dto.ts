@@ -3,7 +3,8 @@ export interface CreateCarDTO {
     brand: string;
     model: string;
     km: number;
-    year: number;
+    year: number; 
     price: number;
     status: string;
-  }
+    items: string[];
+}

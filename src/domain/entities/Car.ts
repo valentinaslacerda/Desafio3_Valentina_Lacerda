@@ -4,7 +4,9 @@ import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm';
+import CarItem from './CarItem';
 
 @Entity('car')
 export class Car {
@@ -31,6 +33,9 @@ export class Car {
 
   @Column({ type: 'varchar', length: 8 })
   status: string | null;
+
+  @OneToMany(() => CarItem, (item) => item.car,{ cascade: ['insert'] })
+  items: CarItem[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date | null;
