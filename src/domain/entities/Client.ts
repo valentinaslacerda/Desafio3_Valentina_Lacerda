@@ -4,7 +4,9 @@ import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { Order } from './Order';
 
 @Entity('clients')
 export class Client {
@@ -31,6 +33,9 @@ export class Client {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date | null;
+
+  @OneToMany(() => Order, (order) => order.client)
+  orders: Order[];
 }
 
 export default Client;
