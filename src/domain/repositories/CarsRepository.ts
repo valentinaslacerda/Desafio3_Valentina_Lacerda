@@ -138,8 +138,16 @@ export class CarsRepository {
     // Get ids of cars based on the fields for filtering
     const [cars_ids, count] = await queryBuilder.getManyAndCount();
 
+    if (cars_ids.length === 0) 
+      return {
+        per_page: Number(limit),
+        total: count,
+        current_page: Number(page),
+        data: []
+      }
+
     // Gets the rest of the car's informartion based on the ids and add ordering
-    let cars = await this.ormRepository
+    const cars = await this.ormRepository
     .createQueryBuilder('car')
     .leftJoinAndSelect('car.items', 'items')
     .andWhere('car.id IN (:...ids)', { ids: cars_ids.map(id => id.id) })
