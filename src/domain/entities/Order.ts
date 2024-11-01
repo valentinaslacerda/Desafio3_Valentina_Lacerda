@@ -38,7 +38,13 @@ export class Order {
   @Column({ type: 'varchar', length: 2, nullable: true })
   state: string | null;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  @Column({
+    name: 'total_value',
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    default: 0,
+  })
   totalValue: number;
 
   @CreateDateColumn({ name: 'created_at' })
