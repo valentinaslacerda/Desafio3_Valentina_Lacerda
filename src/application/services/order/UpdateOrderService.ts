@@ -30,14 +30,13 @@ export class UpdateOrderService {
       throw new Error('Pedido não encontrado');
     }
 
-    // initial Date Time validation
-    const effectiveInitialDate = initialDate ?? order.createdAt;
-    if (effectiveInitialDate && effectiveInitialDate < new Date()) {
-      throw new Error(
-        'A Data Hora Inicial não pode ser menor que a data/hora atual.'
-      );
-    }
+    // Validate initial date only if provided
     if (initialDate) {
+      if (initialDate < new Date()) {
+        throw new Error(
+          'A Data Hora Inicial não pode ser menor que a data/hora atual.'
+        );
+      }
       order.createdAt = initialDate;
     }
 
@@ -45,8 +44,8 @@ export class UpdateOrderService {
     const effectiveFinalDate = finalDate ?? order.finalDate;
     if (
       effectiveFinalDate &&
-      effectiveInitialDate &&
-      effectiveFinalDate < effectiveInitialDate
+      order.createdAt &&
+      effectiveFinalDate < order.createdAt
     ) {
       throw new Error(
         'A Data Hora Final não pode ser menor que a Data Hora Inicial.'
