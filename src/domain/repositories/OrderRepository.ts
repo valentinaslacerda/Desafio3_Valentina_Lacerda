@@ -19,7 +19,10 @@ export class OrderRepository {
   }
 
   public async findById(orderId: string): Promise<Order | null> {
-    return this.repository.findOne({ where: { id: orderId } });
+    return this.repository.findOne({
+      where: { id: orderId },
+      relations: ['client', 'car'],
+    });
   }
 
   // find all orders from a specific customer
@@ -63,8 +66,7 @@ export class OrderRepository {
   }> {
     const query = this.repository
       .createQueryBuilder('order')
-      .leftJoinAndSelect('order.client', 'client')
-      .leftJoinAndSelect('order.car', 'car');
+      .leftJoinAndSelect('order.client', 'client');
 
     if (status) {
       query.andWhere('order.status = :status', { status });
@@ -75,10 +77,10 @@ export class OrderRepository {
     }
 
     if (startDate && endDate) {
-      query.andWhere('order.createdAt BETWEEN :startDate AND :endDate', {
-        startDate,
-        endDate,
-      });
+      query.andWhere(
+        '(order.createdAt BETWEEN :startDate AND :endDate OR order.finalDate BETWEEN :startDate AND :endDate)',
+        { startDate, endDate }
+      );
     } else if (startDate) {
       query.andWhere('order.createdAt >= :startDate', { startDate });
     } else if (endDate) {
