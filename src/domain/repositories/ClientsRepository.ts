@@ -6,6 +6,7 @@ import { CreateClientDTO } from '../../http/dtos/CreateClient.dto';
 import { ReadClientDTO } from '../../http/dtos/ReadClient.dto';
 import { ListClientParams } from '../../application/params/ListClientParams.type';
 import { UpdateClientDTO } from '../../http/dtos/UpdateClient.dto';
+import { DeleteClientDTO } from '../../http/dtos/DeleteClient.dto';
 
 class ClientsRepository implements ClientsRepositoryDTO {
   private ormRepository: Repository<Client>;
@@ -74,11 +75,27 @@ class ClientsRepository implements ClientsRepositoryDTO {
     });
 
     if (!client) {
-      throw new Error('Could not find client');
+      return null;
     }
 
     Object.assign(client, fieldsToUpdate);
 
+    await this.ormRepository.save(client);
+
+    return client;
+  }
+
+  public async delete({ id }: DeleteClientDTO): Promise<Client | null> {
+    const client = await this.ormRepository.findOne({ where: { id } });
+
+    if (!client) {
+      return null;
+    }
+
+    if (client.deletedAt) {
+      return null;
+    }
+    client.deletedAt = new Date();
     await this.ormRepository.save(client);
 
     return client;

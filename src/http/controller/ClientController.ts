@@ -5,6 +5,7 @@ import ReadClientService from '../../application/services/client/ReadClientServi
 import ListClientService from '../../application/services/client/ListClientService';
 import { ListClientParams } from '../../application/params/ListClientParams.type';
 import UpdateClientService from '../../application/services/client/UpdateClientService';
+import DeleteClientService from '../../application/services/client/DeleteClientService';
 
 class ClientController {
   async create(req: Request, res: Response): Promise<Response> {
@@ -72,6 +73,25 @@ class ClientController {
       }
 
       return res.status(200).json(client);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal Server Error' });
+    }
+  }
+  async delete(req: Request, res: Response): Promise<Response> {
+    try {
+      const deleteClientService = new DeleteClientService();
+      const { id } = req.params;
+
+      const client = await deleteClientService.execute({ id });
+
+      if (!client) {
+        return res
+          .status(404)
+          .json({ message: 'Client not found or is already deleted' });
+      }
+
+      return res.status(200).json({ message: 'Client deleted successfully' });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: 'Internal Server Error' });

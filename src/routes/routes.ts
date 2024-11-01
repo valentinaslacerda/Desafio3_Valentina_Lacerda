@@ -11,4 +11,5 @@ routes.post('/client', ClientController.create);
 routes.get('/client/:id', ClientController.findById);
 routes.get('/client', ClientController.index);
 routes.patch('/client/:id', ClientController.update);
+routes.delete('/client/:id', ClientController.delete);
 export default routes;
