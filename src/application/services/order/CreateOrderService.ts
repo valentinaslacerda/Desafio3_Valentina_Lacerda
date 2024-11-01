@@ -31,6 +31,11 @@ export class CreateOrderService {
     if (!car) {
       throw new Error('Carro não encontrado');
     }
+    if (car.status !== 'ativo') {
+      throw new Error(
+        'O carro selecionado não está ativo e não pode ser adicionado ao pedido.'
+      );
+    }
 
     // checks if a customer has an open order
     const existingOrder =
@@ -48,7 +53,7 @@ export class CreateOrderService {
       cep: null,
       city: null,
       state: null,
-      totalValue: 0,
+      totalValue: car.price,
       createdAt: new Date(),
     });
 
