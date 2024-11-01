@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 
@@ -15,7 +16,7 @@ export class User {
   @Column({ type: 'varchar', length: 50 })
   full_name: string | null;
 
-  @Column({ type: 'varchar', length: 100, unique: true })
+  @Column({ type: 'varchar', length: 100 })
   email: string | null;
 
   @Column({ type: 'varchar', length: 200 })
@@ -23,6 +24,9 @@ export class User {
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date | null;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date | null;
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date | null;
