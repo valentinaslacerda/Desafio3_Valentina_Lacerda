@@ -19,8 +19,14 @@ export class CreateCarService {
     status,
     items,
   }: CreateCarDTO): Promise<Car> {
-    status = status.toLowerCase().trim();
 
+    // Required fields
+    const data = [plate, brand, model, km, year, price, status, items];
+    const data_names = ["placa", "marca", "modelo", "quilometragem", "ano", "preço", "status", "items"];
+    for (const [index, info] of data.entries())
+      if (!info) throw new Error("Campo vazio: " + data_names[index]);
+
+    status = status.toLowerCase().trim();
     const unique_items = [...new Set(items)].slice(0, 5);
 
     if (km < 0) throw new Error("A quilometragem do carro não pode ser negativa.");
@@ -28,7 +34,7 @@ export class CreateCarService {
     if (year < 2014) throw new Error("O carro não pode ter mais de 11 anos.");
 
     // Status validation
-    if (!["ativo", "inativo"].includes(status)) 
+    if (!["ativo", "inativo"].includes(status))
       throw new Error("O status do carro deve ser um dos seguintes: 'ativo' ou 'inativo'.");
 
     // Plate validation
@@ -38,7 +44,7 @@ export class CreateCarService {
     if (!regexPlate.test(plate) && !regexPlateMercosul.test(plate)) {
       throw new Error("Placa inválida.");
     }
-    
+
     if (await this.CarsRepository.findByPlate(plate))
       throw new Error("Já existe um carro no sistema com a placa informada.");
 
