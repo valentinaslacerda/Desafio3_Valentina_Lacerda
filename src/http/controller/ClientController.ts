@@ -46,8 +46,8 @@ class ClientController {
   async index(req: Request, res: Response): Promise<Response> {
     try {
       const listClientService = new ListClientService();
-      const params = req.params as ListClientParams;
-
+      const params = req.query as ListClientParams;
+      console.log('parametros aaaa ', req.params);
       const result = await listClientService.execute(params);
 
       return res.status(200).json(result);

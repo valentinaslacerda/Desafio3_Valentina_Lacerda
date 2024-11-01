@@ -31,35 +31,38 @@ class ClientsRepository implements ClientsRepositoryDTO {
     params: ListClientParams
   ): Promise<{ clients: Client[]; total: number }> {
     const queryBuilder = this.ormRepository.createQueryBuilder('client');
-    //Filtro nome e emailail
+
     if (params.name) {
-      queryBuilder.andWhere('client.name LIKE :name', {
-        name: `%${params.name}%`,
+      queryBuilder.andWhere('client.name = :name', {
+        name: params.name,
       });
     }
     if (params.email) {
-      queryBuilder.andWhere('client.email LIKE :email', {
-        email: `%${params.email}%`,
+      queryBuilder.andWhere('client.email = :email', {
+        email: params.email,
       });
     }
     if (params.cpf) {
-      queryBuilder.andWhere('client.cpf LIKE :cpf', { cpf: `%${params.cpf}%` });
-    }
-    //Filtro de exclusão
-    if (params.isDeleted !== undefined) {
-      if (params.isDeleted)
-        queryBuilder.andWhere('client.deletedAt IS NOT NULL');
-      else queryBuilder.andWhere('client.deletedAt IS NULL');
-    }
-    //Ordenação
-    if (params.orderBy !== undefined) {
-      queryBuilder.orderBy(
-        `client.${params.orderBy}`,
-        params.orderDirection || 'ASC'
-      );
+      queryBuilder.andWhere('client.cpf = :cpf', { cpf: params.cpf });
     }
 
-    //Paginação
+    if (params.isDeleted === true) {
+      queryBuilder.andWhere('client.deletedAt IS NOT NULL');
+    } else if (params.isDeleted === false) {
+      queryBuilder.andWhere('client.deletedAt IS NULL');
+    }
+
+    if (params.orderBy) {
+      const orderFields = Array.isArray(params.orderBy)
+        ? params.orderBy
+        : [params.orderBy];
+      const orderDirection = params.orderDirection || 'ASC';
+
+      orderFields.forEach((field) => {
+        queryBuilder.addOrderBy(`client.${field}`, orderDirection);
+      });
+    }
+
     const page = params.page || 1;
     const pageSize = params.pageSize || 10;
     queryBuilder.skip((page - 1) * pageSize).take(pageSize);

@@ -1,4 +1,3 @@
-import { Client } from '../../../domain/entities/Client';
 import ClientsRepository from '../../../domain/repositories/ClientsRepository';
 import { ListClientResultDTO } from '../../../http/dtos/ListeClientResult.dto';
 import { ListClientParams } from '../../params/ListClientParams.type';
