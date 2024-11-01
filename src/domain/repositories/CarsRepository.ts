@@ -3,6 +3,7 @@ import Car from '../entities/Car';
 import { AppDataSource } from '../../infra/data-source';
 import { CreateCarDTO } from '../../http/dtos/CreateCar.dto';
 import { UpdateCarDTO } from '../../http/dtos/UpdateCar.dto';
+import { IPaginateCar } from '../../application/services/Car/ListCarService';
 
 export class CarsRepository {
   private ormRepository: Repository<Car>;
@@ -70,7 +71,7 @@ export class CarsRepository {
     return this.ormRepository.findOne({ where: { plate }, relations: ['items'] });
   }
 
-  public async findAll(page: number, limit: number) { // TODO: interface for return value
+  public async findAll(page: number, limit: number) : Promise<IPaginateCar> {
     const skip = (page - 1) * limit;
     const [cars, count] = await this.ormRepository.createQueryBuilder().skip(skip).take(limit).getManyAndCount();
 

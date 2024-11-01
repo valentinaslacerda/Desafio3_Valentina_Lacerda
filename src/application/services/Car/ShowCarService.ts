@@ -1,5 +1,17 @@
 import { CarsRepository } from '../../../domain/repositories/CarsRepository';
-import Car from '../../../domain/entities/Car';
+
+export interface IShowCar {
+  id: string;
+  plate: string;
+  brand: string;
+  model: string;
+  km: number;
+  year: number;
+  price: number;
+  status: string;
+  items: String[];
+  createdAt: Date;
+}
 
 export class ShowCarService {
   private CarsRepository: CarsRepository;
@@ -8,13 +20,17 @@ export class ShowCarService {
     this.CarsRepository = CarsRepository;
   }
 
-  public async execute(id: string): Promise<Car> {
+  public async execute(id: string): Promise<IShowCar> {
     const car = await this.CarsRepository.findById(id);
 
     if (!car)
       throw new Error("Carro não encontrado.");
 
-    return car;
+    const { items, deletedAt, ...info_car } = car;
+
+    const ret_car: IShowCar = { ...info_car, items: items.map(item => item.name) };
+
+    return ret_car;
   }
 }
 
