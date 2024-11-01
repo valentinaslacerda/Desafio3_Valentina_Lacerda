@@ -24,7 +24,7 @@ export class CreateCarService {
     const data = [plate, brand, model, km, year, price, status, items];
     const data_names = ["placa", "marca", "modelo", "quilometragem", "ano", "preço", "status", "items"];
     for (const [index, info] of data.entries())
-      if (!info) throw new Error("Campo vazio: " + data_names[index]);
+      if (info !== 0 && !info) throw new Error("Campo vazio: " + data_names[index]);
 
     status = status.toLowerCase().trim();
     const unique_items = [...new Set(items)].slice(0, 5);
