@@ -31,7 +31,8 @@ export class UpdateOrderService {
     }
 
     // initial Date Time validation
-    if (initialDate && initialDate < new Date()) {
+    const effectiveInitialDate = initialDate ?? order.createdAt;
+    if (effectiveInitialDate && effectiveInitialDate < new Date()) {
       throw new Error(
         'A Data Hora Inicial não pode ser menor que a data/hora atual.'
       );
@@ -41,7 +42,12 @@ export class UpdateOrderService {
     }
 
     // end Date Time Validation
-    if (finalDate && initialDate && finalDate < initialDate) {
+    const effectiveFinalDate = finalDate ?? order.finalDate;
+    if (
+      effectiveFinalDate &&
+      effectiveInitialDate &&
+      effectiveFinalDate < effectiveInitialDate
+    ) {
       throw new Error(
         'A Data Hora Final não pode ser menor que a Data Hora Inicial.'
       );
