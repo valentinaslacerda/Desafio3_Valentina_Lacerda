@@ -1,5 +1,4 @@
 import { Router } from 'express';
-
 const UserController = require('../http/controller/UserController');
 const AuthController = require('../http/controller/AuthController');
 const Authenticated = require('../http/middleware/Auth');
@@ -13,4 +12,5 @@ routes.post('/user', UserController.create);
 routes.patch('/user/:id', UserController.update);
 routes.delete('/user/:id', UserController.delete);
 
+// routes.post('/client', ClientController.create);
 export default routes;

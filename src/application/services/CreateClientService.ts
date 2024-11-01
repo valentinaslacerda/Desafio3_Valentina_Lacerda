@@ -1,38 +1,18 @@
-import { ClientsRepository } from '../../domain/repositories/ClientsRepository';
+import { CreateClientDTO } from '../../http/dtos/CreateClient.dto';
 import { Client } from '../../domain/entities/Client';
+import ClientsRepository from '../../domain/repositories/ClientsRepository';
 
-interface ICreateClient {
-  name: string;
-  birthday: Date;
-  cpf: string;
-  email: string;
-  phone: string;
-}
-
-export class CreateClientService {
+class CreateClientService {
   private clientsRepository: ClientsRepository;
 
-  constructor(clientsRepository: ClientsRepository) {
-    this.clientsRepository = clientsRepository;
+  constructor() {
+    this.clientsRepository = new ClientsRepository();
   }
 
-  public async execute({
-    name,
-    birthday,
-    cpf,
-    email,
-    phone,
-  }: ICreateClient): Promise<Client> {
-    const client = this.clientsRepository.create({
-      name,
-      birthday,
-      cpf,
-      email,
-      phone,
-    });
-    await this.clientsRepository.save(client);
-
+  public async execute(data: CreateClientDTO): Promise<Client> {
+    const client = await this.clientsRepository.create(data);
     return client;
   }
 }
+
 export default CreateClientService;
