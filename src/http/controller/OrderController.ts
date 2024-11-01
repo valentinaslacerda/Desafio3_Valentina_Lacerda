@@ -37,6 +37,12 @@ class OrderController {
   ): Promise<Response | void> => {
     const { clientId, carId } = req.body;
 
+    if (!clientId)
+      return res.status(400).json({ error: 'O campo clientId é obrigatório.' });
+
+    if (!carId)
+      return res.status(400).json({ error: 'O campo carId é obrigatório.' });
+
     try {
       const order = await this.createOrderService.execute({ clientId, carId });
       return res.status(201).json(order);
@@ -99,13 +105,39 @@ class OrderController {
     const { id } = req.params;
     const { initialDate, finalDate, cep, status } = req.body;
 
+    // cep input validation
+    let formattedCep = cep;
+    if (cep) {
+      const cepRegex = /^\d{5}-\d{3}$/;
+      if (cepRegex.test(cep)) {
+        formattedCep = cep.replace('-', '');
+      } else if (!/^\d{8}$/.test(cep)) {
+        return res.status(400).json({
+          error: 'O campo CEP deve estar no formato 00000-000 ou 00000000.',
+        });
+      }
+    }
+
+    // status validation
+    let formattedStatus = status;
+    if (status) {
+      formattedStatus =
+        status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+      const validStatuses = ['Aprovado', 'Cancelado'];
+      if (!validStatuses.includes(formattedStatus)) {
+        return res.status(400).json({
+          error: `O campo status deve ser um dos seguintes valores: ${validStatuses.join(', ')}.`,
+        });
+      }
+    }
+
     try {
       const order = await this.updateOrderService.updateOrder({
         orderId: id,
         initialDate: initialDate ? new Date(initialDate) : undefined,
         finalDate: finalDate ? new Date(finalDate) : undefined,
-        cep,
-        status,
+        cep: formattedCep,
+        status: formattedStatus as 'Aprovado' | 'Cancelado',
       });
 
       return res.status(200).json(order);
