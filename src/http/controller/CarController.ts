@@ -20,13 +20,13 @@ class CarController {
         plate, brand, model, km, year, price, status, items
       });
 
-      return res.json(car);
+      return res.status(201).json({ id: car.id });
     }
     catch (err) {
       if (err instanceof Error)
-        return res.json({ error: err.message });
+        return res.status(400).json({ error: err.message });
 
-      return res.json({ error: 'Um erro inesperado aconteceu.' });
+      return res.status(500).json({ error: 'Um erro inesperado aconteceu.' });
     }
   }
 
@@ -44,9 +44,9 @@ class CarController {
     }
     catch (err) {
       if (err instanceof Error)
-        return res.json({ error: err.message });
+        return res.status(400).json({ error: err.message });
 
-      return res.json({ error: 'Um erro inesperado aconteceu.' });
+      return res.status(500).json({ error: 'Um erro inesperado aconteceu.' });
     }
   }
 
@@ -75,7 +75,7 @@ class CarController {
 
       const listCar = new ListCarService(carsRepository);
 
-      const car = await listCar.execute({
+      const cars = await listCar.execute({
         page,
         limit,
         status,
@@ -92,16 +92,16 @@ class CarController {
         orderDirection,
       });
 
-      if (car.data.length === 0)
+      if (cars.data.length === 0)
         return res.sendStatus(204);
 
-      return res.json(car);
+      return res.json(cars);
     }
     catch (err) {
       if (err instanceof Error)
-        return res.json({ error: err.message });
+        return res.status(400).json({ error: err.message });
 
-      return res.json({ error: 'Um erro inesperado aconteceu.' });
+      return res.status(500).json({ error: 'Um erro inesperado aconteceu.' });
     }
   }
 
@@ -114,15 +114,15 @@ class CarController {
 
       const updateCar = new UpdateCarService(carsRepository);
 
-      const car = await updateCar.execute(id, { plate, brand, model, km, year, price, status, items });
+      await updateCar.execute(id, { plate, brand, model, km, year, price, status, items });
 
-      return res.json(car);
+      return res.sendStatus(204);
     }
     catch (err) {
       if (err instanceof Error)
-        return res.json({ error: err.message });
+        return res.status(400).json({ error: err.message });
 
-      return res.json({ error: 'Um erro inesperado aconteceu.' });
+      return res.status(500).json({ error: 'Um erro inesperado aconteceu.' });
     }
   }
 
@@ -140,9 +140,9 @@ class CarController {
     }
     catch (err) {
       if (err instanceof Error)
-        return res.json({ error: err.message });
+        return res.status(400).json({ error: err.message });
 
-      return res.json({ error: 'Um erro inesperado aconteceu.' });
+      return res.status(500).json({ error: 'Um erro inesperado aconteceu.' });
     }
   }
 }
