@@ -4,6 +4,7 @@ import { AppDataSource } from '../../infra/data-source';
 import { CreateCarDTO } from '../../http/dtos/CreateCar.dto';
 import { UpdateCarDTO } from '../../http/dtos/UpdateCar.dto';
 import { IPaginateCar } from '../../application/services/Car/ListCarService';
+import { ListCarParams } from '../../application/params/ListCarsParams';
 
 export class CarsRepository {
   private ormRepository: Repository<Car>;
@@ -71,16 +72,89 @@ export class CarsRepository {
     return this.ormRepository.findOne({ where: { plate }, relations: ['items'] });
   }
 
-  public async findAll(page: number, limit: number) : Promise<IPaginateCar> {
+  public async findAll({
+    page,
+    limit,
+    status,
+    endPlate,
+    brand,
+    model,
+    items,
+    km,
+    fromYear,
+    untilYear,
+    minPrice,
+    maxPrice,
+    orderBy,
+    orderDirection,
+  }: ListCarParams): Promise<IPaginateCar> {
+    if (!page) page = 1;
+    if (!limit) limit = 10;
+
     const skip = (page - 1) * limit;
-    const [cars, count] = await this.ormRepository.createQueryBuilder().skip(skip).take(limit).getManyAndCount();
+    
+    const queryBuilder = this.ormRepository
+    .createQueryBuilder('car')
+    .leftJoin('car.items', 'items')
+    .select('car.id')
+    .skip(skip)
+    .take(limit);
+
+    // Filters
+    if (status)
+      queryBuilder.andWhere('car.status = :status', { status });
+
+    if (brand)
+      queryBuilder.andWhere('car.brand = :brand', { brand });
+
+    if (model)
+      queryBuilder.andWhere('car.model = :model', { model });
+
+    if (endPlate)
+      queryBuilder.andWhere('car.plate LIKE :endPlate', { 
+        endPlate: `%${endPlate[endPlate.length - 1]}` // Make sure can only search by last character of plate
+      });
+
+    if (km)
+      queryBuilder.andWhere('car.km <= :km', { km });
+
+    if (fromYear)
+      queryBuilder.andWhere('car.year >= :fromYear', { fromYear });
+
+    if (untilYear)
+      queryBuilder.andWhere('car.year <= :untilYear', { untilYear });
+
+    if (minPrice)
+      queryBuilder.andWhere('car.price >= :minPrice', { minPrice });
+
+    if (maxPrice)
+      queryBuilder.andWhere('car.price <= :maxPrice', { maxPrice });
+
+    if (items) {
+      for (const item of items)
+        queryBuilder.andWhere('items.name = :item', { item });
+    }
+  
+    // Get ids of cars based on the fields for filtering
+    const [cars_ids, count] = await queryBuilder.getManyAndCount();
+
+    // Gets the rest of the car's informartion based on the ids and add ordering
+    let cars = await this.ormRepository
+    .createQueryBuilder('car')
+    .leftJoinAndSelect('car.items', 'items')
+    .andWhere('car.id IN (:...ids)', { ids: cars_ids.map(id => id.id) })
+    .orderBy(
+      orderBy ? `car.${orderBy}` : 'car.id', 
+      orderDirection || 'ASC'
+    )
+    .getMany();
 
     return {
-      per_page: limit,
+      per_page: Number(limit),
       total: count,
-      current_page: page,
+      current_page: Number(page),
       data: cars
-    }
+    };
   }
 }
 

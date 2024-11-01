@@ -2,8 +2,10 @@ import { Request, Response } from 'express';
 import CarsRepository from '../../domain/repositories/CarsRepository';
 import CreateCarService from '../../application/services/Car/CreateCarService';
 import ShowCarService from '../../application/services/Car/ShowCarService';
+import ListCarService from '../../application/services/Car/ListCarService';
 import UpdateCarService from '../../application/services/Car/UpdateCarService';
 import DeleteCarService from '../../application/services/Car/DeleteCarService';
+import { ListCarParams } from '../../application/params/ListCarsParams';
 
 class CarController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -48,6 +50,61 @@ class CarController {
     }
   }
 
+  public async list(req: Request, res: Response): Promise<Response> {
+    try {
+      const {
+        page,
+        limit,
+        status,
+        endPlate,
+        brand,
+        model,
+        km,
+        fromYear,
+        untilYear,
+        minPrice,
+        maxPrice,
+        orderBy,
+        orderDirection,
+      }: ListCarParams = req.query;
+
+      let { items } = req.query;
+      const filtered_items: string[] = (typeof items === 'string') ? [items] : items as string[] ;
+
+      const carsRepository = new CarsRepository();
+
+      const listCar = new ListCarService(carsRepository);
+
+      const car = await listCar.execute({
+        page,
+        limit,
+        status,
+        endPlate,
+        brand,
+        model,
+        items: filtered_items,
+        km,
+        fromYear,
+        untilYear,
+        minPrice,
+        maxPrice,
+        orderBy,
+        orderDirection,
+      });
+
+      if (car.data.length === 0)
+        return res.sendStatus(204);
+
+      return res.json(car);
+    }
+    catch (err) {
+      if (err instanceof Error)
+        return res.json({ error: err.message });
+
+      return res.json({ error: 'Um erro inesperado aconteceu.' });
+    }
+  }
+
   public async update(req: Request, res: Response): Promise<Response> {
     try {
       const id = req.params.id;
@@ -70,7 +127,7 @@ class CarController {
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {
-    try{  
+    try {
       const id = req.params.id;
 
       const carsRepository = new CarsRepository();
