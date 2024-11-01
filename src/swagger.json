@@ -1,0 +1,8 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Compas Car API",
+    "description": "This API aims to manage resources for a car dealership management system.",
+    "version": "1.0.0"
+  }
+}
