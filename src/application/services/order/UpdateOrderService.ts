@@ -105,11 +105,10 @@ export class UpdateOrderService {
   private isOrderComplete(order: Order): boolean {
     return !!(
       order.createdAt &&
-      order.finalDate &&
       order.cep &&
       order.city &&
       order.state &&
-      order.totalValue > 0
+      order.totalValue
     );
   }
 }
