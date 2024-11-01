@@ -8,4 +8,5 @@ routes.get('/user', UserController.index);
 routes.post('/user', UserController.create);
 
 routes.post('/client', ClientController.create);
+routes.get('/client/:id', ClientController.findById);
 export default routes;
