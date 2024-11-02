@@ -18,7 +18,8 @@
     "typeorm:migrate": "env NODE_ENV=development npm run typeorm migration:generate -- -n",
     "typeorm:create": "env NODE_ENV=development npm run typeorm migration:create -- -n",
     "typeorm:run": "ts-node -r tsconfig-paths/register $(yarn bin typeorm) migration:run",
-    "migration:run": "npm run typeorm migration:run -- -d ./src/infra/data-source.ts"
+    "migration:run": "npm run typeorm migration:run -- -d ./src/infra/data-source.ts",
+    "seed:run": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d ./src/infra/data-source.ts"
   },
   "keywords": [],
   "author": "",
@@ -50,6 +51,7 @@
     "mysql2": "^3.11.3",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.20",
+    "typeorm-extension": "^3.6.2",
     "uuid": "^11.0.2"
   }
 }
