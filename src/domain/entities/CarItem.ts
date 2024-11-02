@@ -2,7 +2,8 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import Car from './Car';
 
@@ -14,7 +15,11 @@ export class CarItem {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @ManyToOne(() => Car, (car: Car) => car.items, { eager:true, orphanedRowAction: 'delete' })
+  @ManyToOne(() => Car, (car: Car) => car.items, {
+    eager: true,
+    orphanedRowAction: 'delete',
+  })
+  @JoinColumn({ name: 'car_id' })
   car: Car;
 }
 
