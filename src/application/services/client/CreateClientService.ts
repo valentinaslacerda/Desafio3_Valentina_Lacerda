@@ -9,7 +9,7 @@ class CreateClientService {
     this.clientsRepository = new ClientsRepository();
   }
 
-  public async execute(data: CreateClientDTO): Promise<Client> {
+  public async execute(data: CreateClientDTO): Promise<Client | null> {
     const client = await this.clientsRepository.create(data);
     return client;
   }

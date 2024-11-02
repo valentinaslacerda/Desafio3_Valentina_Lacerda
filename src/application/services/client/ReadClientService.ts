@@ -9,10 +9,10 @@ class ReadClientService {
     this.clientsRepository = new ClientsRepository();
   }
 
-  public async execute({ id }: ReadClientDTO): Promise<Client> {
+  public async execute({ id }: ReadClientDTO): Promise<Client | null> {
     const client = await this.clientsRepository.findById({ id });
     if (!client) {
-      throw new Error('Could not find client');
+      return null;
     }
     return client;
   }

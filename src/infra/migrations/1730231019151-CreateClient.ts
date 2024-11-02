@@ -28,8 +28,9 @@ export class CreateClient1730231019151 implements MigrationInterface {
           {
             name: 'cpf',
             type: 'varchar',
-            length: '11',
+            length: '15',
             isNullable: false,
+            isUnique: true,
           },
           {
             name: 'email',

@@ -15,14 +15,26 @@ class ClientsRepository implements ClientsRepositoryDTO {
     this.ormRepository = AppDataSource.getRepository(Client);
   }
 
-  public async create(data: CreateClientDTO): Promise<Client> {
+  public async create(data: CreateClientDTO): Promise<Client | null> {
+    const existingClient = await this.ormRepository.findOne({
+      where: [{ email: data.email }, { cpf: data.cpf }],
+      withDeleted: true,
+    });
+
+    if (existingClient) {
+      return null;
+    }
+
     const client = this.ormRepository.create(data);
     await this.ormRepository.save(client);
+
     return client;
   }
 
   public async findById({ id }: ReadClientDTO): Promise<Client | null> {
     const client = this.ormRepository.findOneBy({ id });
+
+    if (!client) return null;
 
     return client;
   }
@@ -31,25 +43,35 @@ class ClientsRepository implements ClientsRepositoryDTO {
     params: ListClientParams
   ): Promise<{ clients: Client[]; total: number }> {
     const queryBuilder = this.ormRepository.createQueryBuilder('client');
+    const isDeleted = params.isDeleted;
 
-    if (params.name) {
-      queryBuilder.andWhere('client.name = :name', {
-        name: params.name,
-      });
+    console.log(typeof isDeleted);
+    if (typeof params.isDeleted === 'string') {
+      params.isDeleted = params.isDeleted === 'true';
     }
-    if (params.email) {
-      queryBuilder.andWhere('client.email = :email', {
-        email: params.email,
-      });
-    }
-    if (params.cpf) {
-      queryBuilder.andWhere('client.cpf = :cpf', { cpf: params.cpf });
-    }
-
     if (params.isDeleted === true) {
-      queryBuilder.andWhere('client.deletedAt IS NOT NULL');
+      queryBuilder.andWhere('client.deletedAt IS NOT NULL').withDeleted();
     } else if (params.isDeleted === false) {
       queryBuilder.andWhere('client.deletedAt IS NULL');
+    }
+    if (params.name) {
+      queryBuilder
+        .andWhere('client.name = :name', {
+          name: params.name,
+        })
+        .withDeleted();
+    }
+    if (params.email) {
+      queryBuilder
+        .andWhere('client.email = :email', {
+          email: params.email,
+        })
+        .withDeleted();
+    }
+    if (params.cpf) {
+      queryBuilder
+        .andWhere('client.cpf = :cpf', { cpf: params.cpf })
+        .withDeleted();
     }
 
     if (params.orderBy) {

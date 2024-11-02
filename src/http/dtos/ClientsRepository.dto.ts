@@ -6,7 +6,7 @@ import { UpdateClientDTO } from './UpdateClient.dto';
 import { DeleteClientDTO } from './DeleteClient.dto';
 
 export interface ClientsRepositoryDTO {
-  create(data: CreateClientDTO): Promise<Client>;
+  create(data: CreateClientDTO): Promise<Client | null>;
 
   findById(id: ReadClientDTO): Promise<Client | null>;
 

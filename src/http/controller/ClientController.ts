@@ -6,6 +6,7 @@ import ListClientService from '../../application/services/client/ListClientServi
 import { ListClientParams } from '../../application/params/ListClientParams.type';
 import UpdateClientService from '../../application/services/client/UpdateClientService';
 import DeleteClientService from '../../application/services/client/DeleteClientService';
+import { isValidCPF } from '../../infra/config/cpfValidator';
 
 class ClientController {
   async create(req: Request, res: Response): Promise<Response> {
@@ -14,13 +15,20 @@ class ClientController {
       const { name, birthday, cpf, email, phone } = req.body;
       const id = uuidv4();
       const clientData = { id, name, birthday, cpf, email, phone };
-      const client = await createClientService.execute(clientData);
 
-      if (!client) {
-        return res.status(400).json({ message: 'Client creation failed' });
+      if (cpf && isValidCPF(cpf)) {
+        const client = await createClientService.execute(clientData);
+        if (!client) {
+          return res.status(400).json({
+            message:
+              'Client creation failed: invalid data format or CPF/email already exists.',
+          });
+        }
+
+        return res.status(200).json(client);
+      } else {
+        return res.status(400).json({ message: 'Invalid cpf' });
       }
-
-      return res.status(200).json(client);
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: 'Internal Server Error' });
@@ -47,7 +55,7 @@ class ClientController {
     try {
       const listClientService = new ListClientService();
       const params = req.query as ListClientParams;
-      console.log('parametros aaaa ', req.params);
+
       const result = await listClientService.execute(params);
 
       return res.status(200).json(result);
@@ -64,6 +72,13 @@ class ClientController {
       const { name, birthday, cpf, email, phone } = req.body;
 
       const clientData = { id, name, birthday, cpf, email, phone };
+
+      if (cpf) {
+        if (!isValidCPF(cpf)) {
+          return res.status(400).json({ message: 'Invalid cpf' });
+        }
+      }
+
       const client = await updateClientService.execute(clientData);
 
       if (!client) {
