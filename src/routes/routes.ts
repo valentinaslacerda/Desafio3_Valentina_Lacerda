@@ -3,7 +3,7 @@ const UserController = require('../http/controller/UserController');
 const AuthController = require('../http/controller/AuthController');
 const Authenticated = require('../http/middleware/Auth');
 const CarController = require('../http/controller/CarController');
-const ClientController = require('../http/middleware/ClientController');
+const ClientController = require('../http/controller/ClientController');
 const routes = Router();
 
 routes.post('/login', AuthController.create);
