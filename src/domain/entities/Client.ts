@@ -17,13 +17,13 @@ export class Client {
   @Column({ type: 'date' })
   birthday: Date | null;
 
-  @Column({ type: 'varchar', length: 10 })
+  @Column({ type: 'varchar', length: 15, unique: true })
   cpf: string | null;
 
   @Column({ type: 'varchar', length: 100, unique: true })
   email: string | null;
 
-  @Column({ type: 'varchar', length: 10 })
+  @Column({ type: 'varchar', length: 15 })
   phone: string | null;
 
   @CreateDateColumn({ name: 'created_at' })
