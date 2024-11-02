@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { CreateOrderService } from '../../application/services/order/CreateOrderService';
 import { OrderRepository } from '../../domain/repositories/OrderRepository';
-import { ClientsRepository } from '../../domain/repositories/ClientsRepository';
-import { CarRepository } from '../../domain/repositories/CarRepository';
+import ClientsRepository from '../../domain/repositories/ClientsRepository';
+import { CarsRepository } from '../../domain/repositories/CarsRepository';
 import { AppDataSource } from '../../infra/data-source';
 import { FindOrderService } from '../../application/services/order/FindOrderService';
 import { ListOrderService } from '../../application/services/order/ListOrdersService';
@@ -18,8 +18,8 @@ class OrderController {
 
   constructor() {
     const orderRepository = new OrderRepository(AppDataSource);
-    const clientRepository = new ClientsRepository(AppDataSource);
-    const carRepository = new CarRepository(AppDataSource);
+    const clientRepository = new ClientsRepository();
+    const carRepository = new CarsRepository();
     this.createOrderService = new CreateOrderService(
       orderRepository,
       clientRepository,
