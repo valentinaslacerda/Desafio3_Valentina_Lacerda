@@ -24,10 +24,10 @@ routes.get('/client/:id', ClientController.findById);
 routes.get('/client', ClientController.index);
 routes.patch('/client/:id', ClientController.update);
 routes.delete('/client/:id', ClientController.delete);
-routes.post('/orders', OrderController.create);
-routes.get('/orders/:id', OrderController.findById);
-routes.get('/orders', OrderController.list);
-routes.put('/orders/:id', OrderController.update);
-routes.delete('/orders/:id', OrderController.delete);
+routes.post('/orders', Authenticated, OrderController.create);
+routes.get('/orders/:id', Authenticated, OrderController.findById);
+routes.get('/orders', Authenticated, OrderController.list);
+routes.put('/orders/:id', Authenticated, OrderController.update);
+routes.delete('/orders/:id', Authenticated, OrderController.delete);
 
 export default routes;
