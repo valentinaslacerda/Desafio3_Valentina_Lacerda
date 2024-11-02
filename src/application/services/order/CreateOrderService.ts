@@ -1,18 +1,19 @@
 import { Order } from '../../../domain/entities/Order';
-import { CarRepository } from '../../../domain/repositories/CarRepository';
+import { CarsRepository } from '../../../domain/repositories/CarsRepository';
 import ClientsRepository from '../../../domain/repositories/ClientsRepository';
 import { OrderRepository } from '../../../domain/repositories/OrderRepository';
 import { CreateOrderDTO } from '../../../http/dtos/CreateOrder.dto';
+import { ReadClientDTO } from '../../../http/dtos/ReadClient.dto';
 
 export class CreateOrderService {
   private orderRepository: OrderRepository;
   private clientRepository: ClientsRepository;
-  private carRepository: CarRepository;
+  private carRepository: CarsRepository;
 
   constructor(
     orderRepository: OrderRepository,
     clientRepository: ClientsRepository,
-    carRepository: CarRepository
+    carRepository: CarsRepository
   ) {
     this.orderRepository = orderRepository;
     this.clientRepository = clientRepository;
@@ -20,8 +21,10 @@ export class CreateOrderService {
   }
 
   public async execute({ clientId, carId }: CreateOrderDTO): Promise<Order> {
+    const clientDto: ReadClientDTO = { id: clientId };
+
     // check by id if a client exists
-    const client = await this.clientRepository.findById(clientId);
+    const client = await this.clientRepository.findById(clientDto);
     if (!client) {
       throw new Error('Cliente não encontrado');
     }
