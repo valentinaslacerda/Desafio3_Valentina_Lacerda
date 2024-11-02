@@ -6,36 +6,42 @@ import {
   DeleteDateColumn,
   OneToMany,
 } from 'typeorm';
+import CarItem from './CarItem';
 import { Order } from './Order';
 
 @Entity('car')
 export class Car {
   @PrimaryGeneratedColumn('uuid')
-  id: string | null;
+  id: string;
 
   @Column({ type: 'varchar', length: 7 })
-  plate: string | null;
+  plate: string;
 
   @Column({ type: 'varchar', length: 127 })
-  brand: string | null;
+  brand: string;
 
   @Column({ type: 'varchar', length: 127 })
-  model: string | null;
+  model: string;
 
   @Column({ type: 'int' })
-  km: number | null;
+  km: number;
 
   @Column({ type: 'int' })
-  year: number | null;
+  year: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
-  price: number | null;
+  price: number;
 
   @Column({ type: 'varchar', length: 8 })
-  status: string | null;
+  status: string;
+
+  @OneToMany(() => CarItem, (item) => item.car, {
+    cascade: ['insert', 'update'],
+  })
+  items: CarItem[];
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date | null;
+  createdAt: Date;
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date | null;
