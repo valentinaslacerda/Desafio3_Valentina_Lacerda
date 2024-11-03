@@ -3,11 +3,9 @@ import Car from '../../../domain/entities/Car';
 import { UpdateCarDTO } from '../../../http/dtos/UpdateCar.dto';
 
 export class UpdateCarService {
-  private CarsRepository: CarsRepository;
-
-  constructor(CarsRepository: CarsRepository) {
-    this.CarsRepository = CarsRepository;
-  }
+  constructor(
+    private CarsRepository: CarsRepository
+  ) { }
 
   public async execute(id: string, {
     plate,
@@ -28,7 +26,7 @@ export class UpdateCarService {
     if (year && year < 2014) throw new Error("O carro não pode ter mais de 11 anos.");
 
     // Status validation
-    if (status && !["ativo", "inativo"].includes(status)) 
+    if (status && !["ativo", "inativo"].includes(status))
       throw new Error("O status do carro deve ser um dos seguintes: 'ativo' ou 'inativo'.");
 
     // Plate validation
@@ -38,7 +36,7 @@ export class UpdateCarService {
     if (plate && !regexPlate.test(plate) && !regexPlateMercosul.test(plate)) {
       throw new Error("Placa inválida.");
     }
-    
+
     // Check if car exists
     const car = await this.CarsRepository.findById(id);
 

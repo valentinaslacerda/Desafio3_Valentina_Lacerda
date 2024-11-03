@@ -92,13 +92,13 @@ export class CarsRepository {
     if (!limit) limit = 10;
 
     const skip = (page - 1) * limit;
-    
+
     const queryBuilder = this.ormRepository
-    .createQueryBuilder('car')
-    .leftJoin('car.items', 'items')
-    .select('car.id')
-    .skip(skip)
-    .take(limit);
+      .createQueryBuilder('car')
+      .leftJoin('car.items', 'items')
+      .select('car.id')
+      .skip(skip)
+      .take(limit);
 
     // Filters
     if (status)
@@ -111,7 +111,7 @@ export class CarsRepository {
       queryBuilder.andWhere('car.model = :model', { model });
 
     if (endPlate)
-      queryBuilder.andWhere('car.plate LIKE :endPlate', { 
+      queryBuilder.andWhere('car.plate LIKE :endPlate', {
         endPlate: `%${endPlate[endPlate.length - 1]}` // Make sure can only search by last character of plate
       });
 
@@ -134,11 +134,11 @@ export class CarsRepository {
       for (const item of items)
         queryBuilder.andWhere('items.name = :item', { item });
     }
-  
+
     // Get ids of cars based on the fields for filtering
     const [cars_ids, count] = await queryBuilder.getManyAndCount();
 
-    if (cars_ids.length === 0) 
+    if (cars_ids.length === 0)
       return {
         per_page: Number(limit),
         total: count,
@@ -148,14 +148,14 @@ export class CarsRepository {
 
     // Get the rest of the car's informartion based on the ids and add ordering
     const cars = await this.ormRepository
-    .createQueryBuilder('car')
-    .leftJoinAndSelect('car.items', 'items')
-    .andWhere('car.id IN (:...ids)', { ids: cars_ids.map(id => id.id) })
-    .orderBy(
-      orderBy ? `car.${orderBy}` : 'car.id', 
-      orderDirection || 'ASC'
-    )
-    .getMany();
+      .createQueryBuilder('car')
+      .leftJoinAndSelect('car.items', 'items')
+      .andWhere('car.id IN (:...ids)', { ids: cars_ids.map(id => id.id) })
+      .orderBy(
+        orderBy ? `car.${orderBy}` : 'car.id',
+        orderDirection || 'ASC'
+      )
+      .getMany();
 
     return {
       per_page: Number(limit),

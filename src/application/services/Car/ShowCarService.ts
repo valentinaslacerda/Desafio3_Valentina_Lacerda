@@ -14,11 +14,9 @@ export interface IShowCar {
 }
 
 export class ShowCarService {
-  private CarsRepository: CarsRepository;
-
-  constructor(CarsRepository: CarsRepository) {
-    this.CarsRepository = CarsRepository;
-  }
+  constructor(
+    private CarsRepository: CarsRepository
+  ) { }
 
   public async execute(id: string): Promise<IShowCar> {
     const car = await this.CarsRepository.findById(id);
