@@ -40,7 +40,7 @@ export class CreateCars1730230003182 implements MigrationInterface {
           {
             name: 'price',
             type: 'decimal',
-            precision: 10,
+            precision: 12,
             scale: 2,
           },
           {
