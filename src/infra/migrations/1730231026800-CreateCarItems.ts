@@ -31,10 +31,10 @@ export class CreateCarItems1730231026800 implements MigrationInterface {
     await queryRunner.createForeignKey(
       "car_item",
       new TableForeignKey({
-          columnNames: ["carId"],
-          referencedColumnNames: ["id"],
-          referencedTableName: "car",
-          onDelete: "CASCADE",
+        columnNames: ["carId"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "car",
+        onDelete: "CASCADE",
       }),
     )
   }

@@ -11,11 +11,9 @@ export interface IPaginateCar {
 }
 
 export class ListCarService {
-  private CarsRepository: CarsRepository;
-
-  constructor(CarsRepository: CarsRepository) {
-    this.CarsRepository = CarsRepository;
-  }
+  constructor(
+    private CarsRepository: CarsRepository
+  ) { }
 
   public async execute(listParams: ListCarParams): Promise<IPaginateCar> {
     listParams.items = listParams.items?.slice(0, 5);

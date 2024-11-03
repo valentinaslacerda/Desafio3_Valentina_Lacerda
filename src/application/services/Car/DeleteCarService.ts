@@ -3,9 +3,9 @@ import { OrderRepository } from '../../../domain/repositories/OrderRepository';
 
 export class DeleteCarService {
   constructor(
-    private CarsRepository: CarsRepository, 
+    private CarsRepository: CarsRepository,
     private OrderRepository: OrderRepository
-  ) {}
+  ) { }
 
   public async execute(id: string): Promise<void> {
     const car = await this.CarsRepository.findById(id);

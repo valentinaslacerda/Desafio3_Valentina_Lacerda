@@ -3,11 +3,9 @@ import Car from '../../../domain/entities/Car';
 import { CreateCarDTO } from '../../../http/dtos/CreateCar.dto';
 
 export class CreateCarService {
-  private CarsRepository: CarsRepository;
-
-  constructor(CarsRepository: CarsRepository) {
-    this.CarsRepository = CarsRepository;
-  }
+  constructor(
+    private CarsRepository: CarsRepository
+  ) { }
 
   public async execute({
     plate,
