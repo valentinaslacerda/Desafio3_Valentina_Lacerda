@@ -6,6 +6,8 @@ import ListCarService from '../../application/services/Car/ListCarService';
 import UpdateCarService from '../../application/services/Car/UpdateCarService';
 import DeleteCarService from '../../application/services/Car/DeleteCarService';
 import { ListCarParams } from '../../application/params/ListCarsParams.type';
+import { OrderRepository } from '../../domain/repositories/OrderRepository';
+import { AppDataSource } from '../../infra/data-source';
 
 class CarController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -69,7 +71,7 @@ class CarController {
       }: ListCarParams = req.query;
 
       let { items } = req.query;
-      const filtered_items: string[] = (typeof items === 'string') ? [items] : items as string[] ;
+      const filtered_items: string[] = (typeof items === 'string') ? [items] : items as string[];
 
       const carsRepository = new CarsRepository();
 
@@ -131,8 +133,9 @@ class CarController {
       const id = req.params.id;
 
       const carsRepository = new CarsRepository();
+      const orderRepository = new OrderRepository(AppDataSource);
 
-      const deleteCar = new DeleteCarService(carsRepository);
+      const deleteCar = new DeleteCarService(carsRepository, orderRepository);
 
       await deleteCar.execute(id);
 

@@ -44,6 +44,17 @@ export class OrderRepository {
     return order ?? null;
   }
 
+  // find open orders with a car
+  public async findOpenOrderByCarId(
+    carId: string
+  ): Promise<Order | null> {
+    const order = await this.repository.findOne({
+      where: { car: { id: carId }, status: 'Aberto' },
+      relations: ['client', 'car'],
+    });
+    return order ?? null;
+  }
+
   // create a order
   public async createOrder(orderData: Partial<Order>): Promise<Order> {
     const order = this.repository.create(orderData);
