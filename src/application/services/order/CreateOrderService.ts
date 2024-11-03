@@ -59,7 +59,7 @@ export class CreateOrderService {
       city: null,
       state: null,
       totalValue,
-      createdAt: new Date(),
+      initialDate: new Date(),
     });
 
     return order;
