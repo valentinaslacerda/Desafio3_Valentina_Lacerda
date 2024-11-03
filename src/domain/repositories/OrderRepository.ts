@@ -21,7 +21,7 @@ export class OrderRepository {
   public async findById(orderId: string): Promise<Order | null> {
     return this.repository.findOne({
       where: { id: orderId },
-      relations: ['client', 'car'],
+      relations: ['client', 'car', 'car.items'],
     });
   }
 
@@ -78,16 +78,22 @@ export class OrderRepository {
 
     if (startDate && endDate) {
       query.andWhere(
-        '(order.createdAt BETWEEN :startDate AND :endDate OR order.finalDate BETWEEN :startDate AND :endDate)',
+        '(order.initialDate BETWEEN :startDate AND :endDate OR order.finalDate BETWEEN :startDate AND :endDate)',
         { startDate, endDate }
       );
     } else if (startDate) {
-      query.andWhere('order.createdAt >= :startDate', { startDate });
+      query.andWhere(
+        '(order.initialDate >= :startDate OR (order.finalDate IS NOT NULL AND order.finalDate >= :startDate))',
+        { startDate }
+      );
     } else if (endDate) {
-      query.andWhere('order.createdAt <= :endDate', { endDate });
+      query.andWhere(
+        '(order.initialDate <= :endDate OR (order.finalDate IS NOT NULL AND order.finalDate <= :endDate))',
+        { endDate }
+      );
     }
 
-    query.orderBy('order.createdAt', sortOrder);
+    query.orderBy('order.initialDate', sortOrder);
 
     const total = await query.getCount();
     const pages = Math.ceil(total / limit);
