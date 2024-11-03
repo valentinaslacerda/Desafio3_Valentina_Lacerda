@@ -13,6 +13,7 @@ routes.get('/user/:id', Authenticated, UserController.selectById);
 routes.post('/user', UserController.create);
 routes.patch('/user/:id', UserController.update);
 routes.delete('/user/:id', UserController.delete);
+
 routes.get('/cars', Authenticated, CarController.list);
 routes.get('/cars/:id', Authenticated, CarController.show);
 routes.post('/cars', Authenticated, CarController.create);
@@ -24,6 +25,7 @@ routes.get('/client/:id', ClientController.findById);
 routes.get('/client', ClientController.index);
 routes.patch('/client/:id', ClientController.update);
 routes.delete('/client/:id', ClientController.delete);
+
 routes.post('/orders', Authenticated, OrderController.create);
 routes.get('/orders/:id', Authenticated, OrderController.findById);
 routes.get('/orders', Authenticated, OrderController.list);
