@@ -1,6 +1,6 @@
 import { Order } from '../../../domain/entities/Order';
 import { OrderRepository } from '../../../domain/repositories/OrderRepository';
-import { ListOrdersDTO } from '../../../http/dtos/ListOrders.dto';
+import { OrderOutputDTO } from '../../../http/dtos/CreateOrder.dto';
 
 export class ListOrderService {
   private orderRepository: OrderRepository;
@@ -10,7 +10,7 @@ export class ListOrderService {
   }
 
   public async listOrders(
-    params: ListOrdersDTO
+    params: OrderOutputDTO
   ): Promise<{ orders: Order[]; total: number; pages: number }> {
     return this.orderRepository.listOrders(params);
   }
