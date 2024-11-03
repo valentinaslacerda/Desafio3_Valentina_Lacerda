@@ -4,9 +4,10 @@ import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
-  OneToMany
+  OneToMany,
 } from 'typeorm';
 import CarItem from './CarItem';
+import { Order } from './Order';
 
 @Entity('car')
 export class Car {
@@ -34,14 +35,19 @@ export class Car {
   @Column({ type: 'varchar', length: 8 })
   status: string;
 
-  @OneToMany(() => CarItem, (item) => item.car, { cascade: ['insert', 'update'] })
+  @OneToMany(() => CarItem, (item) => item.car, {
+    cascade: ['insert', 'update'],
+  })
   items: CarItem[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
   @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: Date;
+  deletedAt: Date | null;
+
+  @OneToMany(() => Order, (order) => order.car)
+  orders: Order[];
 }
 
 export default Car;
