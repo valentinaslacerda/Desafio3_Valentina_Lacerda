@@ -1,6 +1,5 @@
 import {
   Column,
-  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -47,8 +46,8 @@ export class Order {
   })
   totalValue: number;
 
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  @Column({ name: 'created_at', type: 'timestamp' })
+  initialDate: Date;
 
   @Column({ name: 'final_date', type: 'timestamp', nullable: true })
   finalDate: Date | null;
