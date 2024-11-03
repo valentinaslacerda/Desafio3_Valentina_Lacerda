@@ -5,7 +5,7 @@ import ShowCarService from '../../application/services/Car/ShowCarService';
 import ListCarService from '../../application/services/Car/ListCarService';
 import UpdateCarService from '../../application/services/Car/UpdateCarService';
 import DeleteCarService from '../../application/services/Car/DeleteCarService';
-import { ListCarParams } from '../../application/params/ListCarsParams';
+import { ListCarParams } from '../../application/params/ListCarsParams.type';
 
 class CarController {
   public async create(req: Request, res: Response): Promise<Response> {

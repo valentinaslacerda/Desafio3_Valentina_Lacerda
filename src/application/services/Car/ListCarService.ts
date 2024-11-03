@@ -1,7 +1,7 @@
 import { CarsRepository } from '../../../domain/repositories/CarsRepository';
 import Car from '../../../domain/entities/Car';
 import { IShowCar } from './ShowCarService';
-import { ListCarParams } from '../../params/ListCarsParams';
+import { ListCarParams } from '../../params/ListCarsParams.type';
 
 export interface IPaginateCar {
   per_page: number;

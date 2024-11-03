@@ -4,7 +4,7 @@ import { AppDataSource } from '../../infra/data-source';
 import { CreateCarDTO } from '../../http/dtos/CreateCar.dto';
 import { UpdateCarDTO } from '../../http/dtos/UpdateCar.dto';
 import { IPaginateCar } from '../../application/services/Car/ListCarService';
-import { ListCarParams } from '../../application/params/ListCarsParams';
+import { ListCarParams } from '../../application/params/ListCarsParams.type';
 
 export class CarsRepository {
   private ormRepository: Repository<Car>;
@@ -146,7 +146,7 @@ export class CarsRepository {
         data: []
       }
 
-    // Gets the rest of the car's informartion based on the ids and add ordering
+    // Get the rest of the car's informartion based on the ids and add ordering
     const cars = await this.ormRepository
     .createQueryBuilder('car')
     .leftJoinAndSelect('car.items', 'items')
