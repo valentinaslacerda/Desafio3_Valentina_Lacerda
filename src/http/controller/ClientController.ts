@@ -7,6 +7,7 @@ import { ListClientParams } from '../../application/params/ListClientParams.type
 import UpdateClientService from '../../application/services/client/UpdateClientService';
 import DeleteClientService from '../../application/services/client/DeleteClientService';
 import { isValidCPF } from '../../infra/config/cpfValidator';
+import { emailRegex } from '../../infra/config/regex';
 
 class ClientController {
   async create(req: Request, res: Response): Promise<Response> {
@@ -16,7 +17,7 @@ class ClientController {
       const id = uuidv4();
       const clientData = { id, name, birthday, cpf, email, phone };
 
-      if (cpf && isValidCPF(cpf)) {
+      if ((cpf && isValidCPF(cpf)) || (email && !emailRegex.test(email))) {
         const client = await createClientService.execute(clientData);
         if (!client) {
           return res.status(400).json({
@@ -76,6 +77,12 @@ class ClientController {
       if (cpf) {
         if (!isValidCPF(cpf)) {
           return res.status(400).json({ message: 'Invalid cpf' });
+        }
+      }
+
+      if (email) {
+        if (!emailRegex.test(email)) {
+          return res.status(400).json({ message: 'Invalid email' });
         }
       }
 

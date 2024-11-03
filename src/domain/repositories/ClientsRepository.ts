@@ -16,6 +16,7 @@ class ClientsRepository implements ClientsRepositoryDTO {
   }
 
   public async create(data: CreateClientDTO): Promise<Client | null> {
+    data.cpf = data.cpf.replace(/\D/g, '');
     const existingClient = await this.ormRepository.findOne({
       where: [{ email: data.email }, { cpf: data.cpf }],
       withDeleted: true,
@@ -94,6 +95,10 @@ class ClientsRepository implements ClientsRepositoryDTO {
   }
 
   public async update(data: UpdateClientDTO): Promise<Client | null> {
+    if (data.cpf) {
+      data.cpf = data.cpf.replace(/\D/g, '');
+    }
+
     const { id, ...fieldsToUpdate } = data;
     const client = await this.ormRepository.findOne({
       where: { id, deletedAt: undefined },
