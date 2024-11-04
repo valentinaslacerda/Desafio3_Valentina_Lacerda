@@ -14,11 +14,11 @@ export class CarSeeder implements Seeder {
     const carItemRepository = dataSource.getRepository(CarItem);
 
     const carData = {
-      plate: 'pregada',
+      plate: 'ABC1D23',
       brand: 'Rolls-Royce Limited',
-      model: 'Rolls-Royce Wraith Black',
+      model: 'Wraith Black',
       km: 50000,
-      year: 1906,
+      year: 2021,
       price: 18300000,
       status: 'ativo',
     };
