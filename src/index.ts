@@ -11,7 +11,7 @@ AppDataSource.initialize().then(() => {
 
   app.use(express.json());
 
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+  app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
   app.use('/api/v1/', routes);
 
