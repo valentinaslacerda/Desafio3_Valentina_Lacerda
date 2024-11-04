@@ -8,17 +8,17 @@ const ClientController = require('../http/controller/ClientController');
 const routes = Router();
 
 routes.post('/login', AuthController.create);
-routes.get('/user', UserController.index);
+routes.get('/user', Authenticated, UserController.index);
 routes.get('/user/:id', Authenticated, UserController.selectById);
-routes.post('/user', UserController.create);
-routes.patch('/user/:id', UserController.update);
-routes.delete('/user/:id', UserController.delete);
+routes.post('/user', Authenticated, UserController.create);
+routes.patch('/user/:id', Authenticated, UserController.update);
+routes.delete('/user/:id', Authenticated, UserController.delete);
 
-routes.get('/cars', Authenticated, CarController.list);
-routes.get('/cars/:id', Authenticated, CarController.show);
-routes.post('/cars', Authenticated, CarController.create);
-routes.patch('/cars/:id', Authenticated, CarController.update);
-routes.delete('/cars/:id', Authenticated, CarController.delete);
+routes.get('/car', Authenticated, CarController.list);
+routes.get('/car/:id', Authenticated, CarController.show);
+routes.post('/car', Authenticated, CarController.create);
+routes.patch('/car/:id', Authenticated, CarController.update);
+routes.delete('/car/:id', Authenticated, CarController.delete);
 
 routes.post('/client', Authenticated, ClientController.create);
 routes.get('/client/:id', Authenticated, ClientController.findById);
@@ -26,10 +26,10 @@ routes.get('/client', Authenticated, ClientController.index);
 routes.patch('/client/:id', Authenticated, ClientController.update);
 routes.delete('/client/:id', Authenticated, ClientController.delete);
 
-routes.post('/orders', Authenticated, OrderController.create);
-routes.get('/orders/:id', Authenticated, OrderController.findById);
-routes.get('/orders', Authenticated, OrderController.list);
-routes.put('/orders/:id', Authenticated, OrderController.update);
-routes.delete('/orders/:id', Authenticated, OrderController.delete);
+routes.post('/order', Authenticated, OrderController.create);
+routes.get('/order/:id', Authenticated, OrderController.findById);
+routes.get('/order', Authenticated, OrderController.list);
+routes.put('/order/:id', Authenticated, OrderController.update);
+routes.delete('/order/:id', Authenticated, OrderController.delete);
 
 export default routes;
