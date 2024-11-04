@@ -15,7 +15,7 @@ export class CreateCarItems1730231026800 implements MigrationInterface {
             generationStrategy: 'uuid',
           },
           {
-            name: 'car_id',
+            name: 'carId',
             type: 'varchar',
             length: '36',
           },
@@ -31,15 +31,15 @@ export class CreateCarItems1730231026800 implements MigrationInterface {
     await queryRunner.createForeignKey(
       "car_item",
       new TableForeignKey({
-          columnNames: ["car_id"],
-          referencedColumnNames: ["id"],
-          referencedTableName: "car",
-          onDelete: "CASCADE",
+        columnNames: ["carId"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "car",
+        onDelete: "CASCADE",
       }),
     )
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('orders');
+    await queryRunner.dropTable('car_item');
   }
 }
