@@ -36,7 +36,14 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginRetorno"
+                }
+              }
+            }
           },
           "400": {
             "description": "Um erro inesperado aconteceu."
@@ -1134,6 +1141,17 @@
             "type": "string"
           },
           "password": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginRetorno": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "message": {
             "type": "string"
           }
         }

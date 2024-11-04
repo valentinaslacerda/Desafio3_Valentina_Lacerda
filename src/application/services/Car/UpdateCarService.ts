@@ -43,6 +43,10 @@ export class UpdateCarService {
     if (!car)
       throw new Error("Carro não encontrado.");
 
+    // No fields to update
+    if (!plate && !brand && !model && !km && !year && !price && !status && !items)
+      return car;
+
     // Check if there's no other car with the new plate if specified
     if (plate) {
       const carByPlate = await this.CarsRepository.findByPlate(plate);
