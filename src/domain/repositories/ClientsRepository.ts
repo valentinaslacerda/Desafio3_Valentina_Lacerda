@@ -42,9 +42,7 @@ class ClientsRepository implements ClientsRepositoryDTO {
     params: ListClientParams
   ): Promise<{ clients: Client[]; total: number }> {
     const queryBuilder = this.ormRepository.createQueryBuilder('client');
-    const isDeleted = params.isDeleted;
 
-    console.log(typeof isDeleted);
     if (typeof params.isDeleted === 'string') {
       params.isDeleted = params.isDeleted === 'true';
     }
