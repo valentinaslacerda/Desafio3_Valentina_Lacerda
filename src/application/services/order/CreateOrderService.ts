@@ -46,6 +46,9 @@ export class CreateOrderService {
       throw new Error('O cliente já possui um pedido aberto');
     }
 
+    car.status = 'inativo';
+    await this.carRepository.save(car);
+
     const totalValue = car.price ?? 0;
 
     const order = this.orderRepository.createOrder({

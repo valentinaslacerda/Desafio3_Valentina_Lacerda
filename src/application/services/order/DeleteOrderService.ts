@@ -1,11 +1,14 @@
 import { Order } from '../../../domain/entities/Order';
+import CarsRepository from '../../../domain/repositories/CarsRepository';
 import { OrderRepository } from '../../../domain/repositories/OrderRepository';
 
 export class DeleteOrderService {
   private orderRepository: OrderRepository;
+  private carRepository: CarsRepository;
 
-  constructor(orderRepository: OrderRepository) {
+  constructor(orderRepository: OrderRepository, carRepository: CarsRepository) {
     this.orderRepository = orderRepository;
+    this.carRepository = carRepository;
   }
 
   public async softDeleteOrder(orderId: string): Promise<Order> {
@@ -20,6 +23,12 @@ export class DeleteOrderService {
 
     order.status = 'Cancelado';
     order.cancellationDate = new Date();
+
+    const car = await this.carRepository.findById(order.car.id);
+    if (car) {
+      car.status = 'ativo';
+      await this.carRepository.save(car);
+    }
 
     return await this.orderRepository.createOrder(order);
   }

@@ -27,8 +27,14 @@ class OrderController {
     );
     this.findOrderService = new FindOrderService(orderRepository);
     this.listOrderService = new ListOrderService(orderRepository);
-    this.updateOrderService = new UpdateOrderService(orderRepository);
-    this.deleteOrderService = new DeleteOrderService(orderRepository);
+    this.updateOrderService = new UpdateOrderService(
+      orderRepository,
+      carRepository
+    );
+    this.deleteOrderService = new DeleteOrderService(
+      orderRepository,
+      carRepository
+    );
   }
 
   public create = async (
