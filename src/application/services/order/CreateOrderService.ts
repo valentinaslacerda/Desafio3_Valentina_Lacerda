@@ -3,7 +3,6 @@ import { CarsRepository } from '../../../domain/repositories/CarsRepository';
 import ClientsRepository from '../../../domain/repositories/ClientsRepository';
 import { OrderRepository } from '../../../domain/repositories/OrderRepository';
 import { CreateOrderDTO } from '../../../http/dtos/CreateOrder.dto';
-import { ReadClientDTO } from '../../../http/dtos/ReadClient.dto';
 
 export class CreateOrderService {
   private orderRepository: OrderRepository;
@@ -21,7 +20,7 @@ export class CreateOrderService {
   }
 
   public async execute({ clientId, carId }: CreateOrderDTO): Promise<Order> {
-    const clientDto: ReadClientDTO = { id: clientId };
+    const clientDto: string = clientId;
 
     // check by id if a client exists
     const client = await this.clientRepository.findById(clientDto);

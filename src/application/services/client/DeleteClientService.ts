@@ -1,4 +1,3 @@
-import { DeleteClientDTO } from '../../../http/dtos/DeleteClient.dto';
 import { Client } from '../../../domain/entities/Client';
 import ClientsRepository from '../../../domain/repositories/ClientsRepository';
 
@@ -9,7 +8,7 @@ class DeleteClientService {
     this.clientsRepository = new ClientsRepository();
   }
 
-  public async execute(id: DeleteClientDTO): Promise<Client | null> {
+  public async execute(id: string): Promise<Client | null> {
     const client = await this.clientsRepository.delete(id);
     return client;
   }

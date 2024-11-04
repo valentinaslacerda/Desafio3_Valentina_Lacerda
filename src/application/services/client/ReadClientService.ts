@@ -1,6 +1,5 @@
 import { Client } from '../../../domain/entities/Client';
 import ClientsRepository from '../../../domain/repositories/ClientsRepository';
-import { ReadClientDTO } from '../../../http/dtos/ReadClient.dto';
 
 class ReadClientService {
   private clientsRepository: ClientsRepository;
@@ -9,8 +8,8 @@ class ReadClientService {
     this.clientsRepository = new ClientsRepository();
   }
 
-  public async execute({ id }: ReadClientDTO): Promise<Client | null> {
-    const client = await this.clientsRepository.findById({ id });
+  public async execute(id: string): Promise<Client | null> {
+    const client = await this.clientsRepository.findById(id);
     if (!client) {
       return null;
     }
