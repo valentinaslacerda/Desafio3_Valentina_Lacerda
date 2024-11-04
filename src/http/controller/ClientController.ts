@@ -41,7 +41,7 @@ class ClientController {
       const readClientService = new ReadClientService();
       const { id } = req.params;
       console.log(req.params);
-      const client = await readClientService.execute({ id });
+      const client = await readClientService.execute(id);
       if (!client) {
         return res.status(404).json({ message: 'Client not found' });
       }
@@ -105,7 +105,7 @@ class ClientController {
       const deleteClientService = new DeleteClientService();
       const { id } = req.params;
 
-      const client = await deleteClientService.execute({ id });
+      const client = await deleteClientService.execute(id);
 
       if (!client) {
         return res

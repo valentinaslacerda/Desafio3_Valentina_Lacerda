@@ -3,10 +3,8 @@ import { Client } from '../entities/Client';
 import { AppDataSource } from '../../infra/data-source';
 import { ClientsRepositoryDTO } from '../../http/dtos/ClientsRepository.dto';
 import { CreateClientDTO } from '../../http/dtos/CreateClient.dto';
-import { ReadClientDTO } from '../../http/dtos/ReadClient.dto';
 import { ListClientParams } from '../../application/params/ListClientParams.type';
 import { UpdateClientDTO } from '../../http/dtos/UpdateClient.dto';
-import { DeleteClientDTO } from '../../http/dtos/DeleteClient.dto';
 
 class ClientsRepository implements ClientsRepositoryDTO {
   private ormRepository: Repository<Client>;
@@ -32,7 +30,7 @@ class ClientsRepository implements ClientsRepositoryDTO {
     return client;
   }
 
-  public async findById({ id }: ReadClientDTO): Promise<Client | null> {
+  public async findById(id: string): Promise<Client | null> {
     const client = this.ormRepository.findOneBy({ id });
 
     if (!client) return null;
@@ -115,7 +113,7 @@ class ClientsRepository implements ClientsRepositoryDTO {
     return client;
   }
 
-  public async delete({ id }: DeleteClientDTO): Promise<Client | null> {
+  public async delete(id: string): Promise<Client | null> {
     const client = await this.ormRepository.findOne({ where: { id } });
 
     if (!client) {
