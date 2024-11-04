@@ -20,11 +20,11 @@ routes.post('/cars', Authenticated, CarController.create);
 routes.patch('/cars/:id', Authenticated, CarController.update);
 routes.delete('/cars/:id', Authenticated, CarController.delete);
 
-routes.post('/client', ClientController.create);
-routes.get('/client/:id', ClientController.findById);
-routes.get('/client', ClientController.index);
-routes.patch('/client/:id', ClientController.update);
-routes.delete('/client/:id', ClientController.delete);
+routes.post('/client', Authenticated, ClientController.create);
+routes.get('/client/:id', Authenticated, ClientController.findById);
+routes.get('/client', Authenticated, ClientController.index);
+routes.patch('/client/:id', Authenticated, ClientController.update);
+routes.delete('/client/:id', Authenticated, ClientController.delete);
 
 routes.post('/orders', Authenticated, OrderController.create);
 routes.get('/orders/:id', Authenticated, OrderController.findById);
