@@ -5,8 +5,8 @@ import routes from './routes/routes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocs from './swagger.json';
 
+const app = express();
 AppDataSource.initialize().then(() => {
-  const app = express();
   app.use(cors());
 
   app.use(express.json());
@@ -15,7 +15,9 @@ AppDataSource.initialize().then(() => {
 
   app.use('/api/v1/', routes);
 
-  return app.listen(process.env.PORT, () => {
+  app.listen(process.env.PORT, () => {
     console.log(`Server started on port ${process.env.PORT}`);
   });
 });
+
+export default app;
