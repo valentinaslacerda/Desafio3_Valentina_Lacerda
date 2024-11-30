@@ -5,6 +5,7 @@ import { generatePlate } from './utils';
 
 let token: string;
 let existsPlate: string;
+let carId: string;
 
 beforeAll(async () => {
   if (!AppDataSource.isInitialized) {
@@ -45,6 +46,8 @@ describe('POST /api/v1/car', () => {
       .send(carData);
 
     existsPlate = carData.plate;
+    carId = response.body.id;
+
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('id');
   });
@@ -138,5 +141,24 @@ describe('POST /api/v1/car', () => {
     expect(response.body).toEqual({
       error: 'O preço do carro não pode ser negativa.',
     });
+  });
+
+  ///////////Show Car Tests
+  it('Deve retornar carro buscado por id existente', async () => {
+    const response = await request(app)
+      .get(`/api/v1/car/${carId}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.id).toBe(carId);
+  });
+
+  it('Deve retornar 400 para carro não encontrado', async () => {
+    const response = await request(app)
+      .get(`/api/v1/car/Invalid`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ error: 'Carro não encontrado.' });
   });
 });
