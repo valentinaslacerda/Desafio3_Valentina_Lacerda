@@ -296,4 +296,39 @@ describe('Testes Para Client', () => {
       'Client not found or is already deleted'
     );
   });
+
+  it('Deve retornar uma lista de clientes com paginação', async () => {
+    const response = await request(app)
+      .get('/api/v1/client')
+      .set('Authorization', `Bearer ${token}`)
+      .query({ page: 1, pageSize: 2 });
+
+    expect(response.status).toBe(200);
+  });
+
+  it('Deve filtrar clientes pelo nome', async () => {
+    const response = await request(app)
+      .get('/api/v1/client')
+      .set('Authorization', `Bearer ${token}`)
+      .query({ name: 'Alice Atualizada' });
+
+    expect(response.status).toBe(200);
+
+    const [client] = response.body.clients;
+
+    expect(client.name).toBe('Alice Atualizada');
+  });
+
+  it('Deve retornar clientes deletados quando especificado', async () => {
+    const response = await request(app)
+      .get('/api/v1/client')
+      .set('Authorization', `Bearer ${token}`)
+      .query({ isDeleted: true });
+
+    expect(response.status).toBe(200);
+
+    const [client] = response.body.clients;
+
+    expect(client.deletedAt).not.toBeNull();
+  });
 });
