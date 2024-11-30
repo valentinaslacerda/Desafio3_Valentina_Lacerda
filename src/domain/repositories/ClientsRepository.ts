@@ -96,6 +96,29 @@ class ClientsRepository implements ClientsRepositoryDTO {
     }
 
     const { id, ...fieldsToUpdate } = data;
+    const cpf = fieldsToUpdate.cpf;
+    const email = fieldsToUpdate.email;
+
+    if (cpf) {
+      const clientWithSameCPF = await this.ormRepository.findOne({
+        where: { cpf, deletedAt: undefined },
+      });
+
+      if (clientWithSameCPF && clientWithSameCPF.id !== id) {
+        throw new Error('Client creation failed: CPF already exists.');
+      }
+    }
+
+    if (email) {
+      const clientWithSameEmail = await this.ormRepository.findOne({
+        where: { email, deletedAt: undefined },
+      });
+
+      if (clientWithSameEmail && clientWithSameEmail.id !== id) {
+        throw new Error('Client creation failed: Email already exists.');
+      }
+    }
+
     const client = await this.ormRepository.findOne({
       where: { id, deletedAt: undefined },
     });
@@ -110,7 +133,6 @@ class ClientsRepository implements ClientsRepositoryDTO {
 
     return client;
   }
-
   public async delete(id: string): Promise<Client | null> {
     const client = await this.ormRepository.findOne({ where: { id } });
 

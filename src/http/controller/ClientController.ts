@@ -17,19 +17,22 @@ class ClientController {
       const id = uuidv4();
       const clientData = { id, name, birthday, cpf, email, phone };
 
-      if ((cpf && isValidCPF(cpf)) || (email && !emailRegex.test(email))) {
-        const client = await createClientService.execute(clientData);
-        if (!client) {
-          return res.status(400).json({
-            message:
-              'Client creation failed: invalid data format or CPF/email already exists.',
-          });
-        }
-
-        return res.status(200).json(client);
-      } else {
+      if (!isValidCPF(cpf)) {
         return res.status(400).json({ message: 'Invalid cpf' });
       }
+
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: 'Invalid email' });
+      }
+
+      const client = await createClientService.execute(clientData);
+      if (!client) {
+        return res.status(400).json({
+          message: 'Client creation failed: CPF/email already exists.',
+        });
+      }
+
+      return res.status(200).json(client);
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: 'Internal Server Error' });
@@ -73,17 +76,12 @@ class ClientController {
       const { name, birthday, cpf, email, phone } = req.body;
 
       const clientData = { id, name, birthday, cpf, email, phone };
-
-      if (cpf) {
-        if (!isValidCPF(cpf)) {
-          return res.status(400).json({ message: 'Invalid cpf' });
-        }
+      if (!isValidCPF(cpf)) {
+        return res.status(400).json({ message: 'Invalid cpf' });
       }
 
-      if (email) {
-        if (!emailRegex.test(email)) {
-          return res.status(400).json({ message: 'Invalid email' });
-        }
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: 'Invalid email' });
       }
 
       const client = await updateClientService.execute(clientData);
@@ -95,11 +93,23 @@ class ClientController {
       }
 
       return res.status(200).json(client);
-    } catch (error) {
-      console.error(error);
+    } catch (error: unknown) {
+      if (error && error instanceof Error) {
+        if (
+          error.message === 'Client creation failed: CPF already exists.' ||
+          error.message === 'Client creation failed: Email already exists.'
+        ) {
+          return res.status(400).json({ message: error.message });
+        }
+
+        console.error(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+      }
+      console.error('Unknown error:', error);
       return res.status(500).json({ message: 'Internal Server Error' });
     }
   }
+
   async delete(req: Request, res: Response): Promise<Response> {
     try {
       const deleteClientService = new DeleteClientService();
