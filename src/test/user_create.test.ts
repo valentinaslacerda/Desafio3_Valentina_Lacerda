@@ -87,7 +87,7 @@ describe('Create User Route', () => {
 
   it('Deve retornar erro ao tentar criar usuário com email já existente', async () => {
     const existingUser = {
-      full_name: 'Usuário Existente',
+      full_name: 'Usuario',
       email: 'test@test.com',
       password: '12345678',
     };

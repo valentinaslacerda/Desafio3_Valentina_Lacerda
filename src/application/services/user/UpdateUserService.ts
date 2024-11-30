@@ -20,19 +20,19 @@ export class UpdateUserService {
     const user = await userRepository.findOne({ where: { id } });
     if (!user) throw new Error('Usuário não existe');
 
-    if (email && email !== user.email) {
-      const existingUser = await userRepository.findOne({
-        where: { email, deletedAt: IsNull() },
-      });
-      if (existingUser) throw new Error('Email já está em uso');
-    }
-
     if (user.deletedAt !== null) {
       throw new Error('Não é possível atualizar um usuário excluído');
     }
 
     if (!user.password || !(await compare(password, user.password))) {
       throw new Error('Senha atual incorreta');
+    }
+
+    if (email && email !== user.email) {
+      const existingUser = await userRepository.findOne({
+        where: { email, deletedAt: IsNull() },
+      });
+      if (existingUser) throw new Error('Email já está em uso');
     }
 
     const updatedPassword = newPassword
