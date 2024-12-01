@@ -5,9 +5,7 @@ import { generateValidEmail } from './utils';
 
 let token: string;
 let userId: string;
-let cpfExists: string;
 let emailExists: string;
-let deletedClient: string;
 
 beforeAll(async () => {
   if (!AppDataSource.isInitialized) {
@@ -145,5 +143,124 @@ describe('Testes para Serviços de User', () => {
 
     expect(response.status).toBe(404);
     expect(response.body.error).toBe('Usuário não encontrado');
+  });
+
+  ////////////////Update User Tests
+  it('Deve atualizar user com sucesso', async () => {
+    const newUser = {
+      full_name: 'New User',
+      password: '12345678',
+    };
+
+    const response = await request(app)
+      .patch(`/api/v1/user/${userId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(newUser);
+
+    expect(response.status).toBe(200);
+  });
+
+  it('Não deve atualizar user sem colocar senha atual', async () => {
+    const newUser = {
+      full_name: 'New User',
+    };
+
+    const response = await request(app)
+      .patch(`/api/v1/user/${userId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(newUser);
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('Senha atual não preenchida');
+  });
+
+  it('Não deve atualizar user que não existe', async () => {
+    const newUser = {
+      full_name: 'New User',
+      password: '12345678',
+    };
+
+    const response = await request(app)
+      .patch(`/api/v1/user/invalidId`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(newUser);
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('Usuário não existe');
+  });
+
+  it('Não deve atualizar user deletado', async () => {
+    const user = {
+      full_name: 'Usuario',
+      email: generateValidEmail(),
+      password: '12345678',
+    };
+
+    const response = await request(app)
+      .post('/api/v1/user')
+      .set('Authorization', `Bearer ${token}`)
+      .send(user);
+
+    const id = response.body.id;
+
+    await request(app)
+      .delete(`/api/v1/user/${id}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    const newUser = {
+      full_name: 'New User',
+      password: '12345678',
+    };
+
+    const res = await request(app)
+      .patch(`/api/v1/user/${id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(newUser);
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('Usuário não existe');
+  });
+
+  it('Não deve atualizar user com senha atual incorreta', async () => {
+    const newUser = {
+      full_name: 'New User',
+      password: 'wrongPassword',
+    };
+
+    const response = await request(app)
+      .patch(`/api/v1/user/${userId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(newUser);
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('Senha atual incorreta');
+  });
+
+  it('Não deve atualizar user com email já em uso', async () => {
+    const user = {
+      full_name: 'Usuario',
+      email: generateValidEmail(),
+      password: '12345678',
+    };
+
+    const response = await request(app)
+      .post('/api/v1/user')
+      .set('Authorization', `Bearer ${token}`)
+      .send(user);
+
+    const id = response.body.id;
+
+    const newUser = {
+      email: emailExists,
+      password: '12345678',
+    };
+
+    const res = await request(app)
+      .patch(`/api/v1/user/${id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(newUser);
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('Email já está em uso');
   });
 });
