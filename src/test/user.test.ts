@@ -127,4 +127,23 @@ describe('Testes para Serviços de User', () => {
     expect(response.status).toBe(400);
     expect(response.body.error).toBe('Usuário já existe');
   });
+
+  /////////Find By Id Tests
+  it('Deve retornar usuário buscado', async () => {
+    const response = await request(app)
+      .get(`/api/v1/user/${userId}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.id).toBe(userId);
+  });
+
+  it('Deve retornar que usuário buscado buscado não existe', async () => {
+    const response = await request(app)
+      .get('/api/v1/user/idInvalido')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(404);
+    expect(response.body.error).toBe('Usuário não encontrado');
+  });
 });
