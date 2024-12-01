@@ -4,7 +4,7 @@ import { AppDataSource } from '../infra/data-source';
 import { generateValidEmail } from './utils';
 
 let token: string;
-let clientId: string;
+let userId: string;
 let cpfExists: string;
 let emailExists: string;
 let deletedClient: string;
@@ -29,4 +29,102 @@ afterAll(async () => {
   }
 });
 
-describe();
+describe('Testes para Serviços de User', () => {
+  ////////////////Create User Tests
+  it('Deve criar um novo usuário com dados válidos', async () => {
+    const user = {
+      full_name: 'Usuario',
+      email: generateValidEmail(),
+      password: '12345678',
+    };
+
+    const response = await request(app)
+      .post('/api/v1/user')
+      .set('Authorization', `Bearer ${token}`)
+      .send(user);
+
+    userId = response.body.id;
+    emailExists = response.body.email;
+    expect(response.status).toBe(201);
+  });
+
+  it('Não deve criar um novo usuário sem dado de email', async () => {
+    const user = {
+      full_name: 'Usuario',
+      email: undefined,
+      password: '12345678',
+    };
+
+    const response = await request(app)
+      .post('/api/v1/user')
+      .set('Authorization', `Bearer ${token}`)
+      .send(user);
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('Campo vazio: email');
+  });
+
+  it('Não deve criar um novo usuário sem dado de nome', async () => {
+    const user = {
+      full_name: undefined,
+      email: generateValidEmail(),
+      password: '12345678',
+    };
+
+    const response = await request(app)
+      .post('/api/v1/user')
+      .set('Authorization', `Bearer ${token}`)
+      .send(user);
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('Campo vazio: nome completo');
+  });
+
+  it('Não deve criar um novo usuário sem dado de senha', async () => {
+    const user = {
+      full_name: 'Usuario',
+      email: generateValidEmail(),
+      password: undefined,
+    };
+
+    const response = await request(app)
+      .post('/api/v1/user')
+      .set('Authorization', `Bearer ${token}`)
+      .send(user);
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('Campo vazio: senha');
+  });
+
+  it('Não deve criar um novo usuário com dado de email inválido', async () => {
+    const user = {
+      full_name: 'Usuario',
+      email: 'invalidEmail',
+      password: '12345678',
+    };
+
+    const response = await request(app)
+      .post('/api/v1/user')
+      .set('Authorization', `Bearer ${token}`)
+      .send(user);
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('E-mail inválido.');
+  });
+
+  it('Não deve criar o mesmo usuário', async () => {
+    const user = {
+      full_name: 'Usuario',
+      email: emailExists,
+      password: '12345678',
+    };
+
+    const response = await request(app)
+      .post('/api/v1/user')
+      .set('Authorization', `Bearer ${token}`)
+      .send(user);
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('Usuário já existe');
+  });
+});
