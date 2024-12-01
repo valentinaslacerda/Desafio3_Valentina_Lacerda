@@ -263,4 +263,67 @@ describe('Testes para Serviços de User', () => {
     expect(res.status).toBe(400);
     expect(res.body.error).toBe('Email já está em uso');
   });
+
+  /////////////Delete User Tests
+  it('Deve retornar que usuário que busca deletar não é encontrado', async () => {
+    const response = await request(app)
+      .delete('/api/v1/user/idInvalido')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('ID do Usuário não encontrado');
+  });
+
+  it('Deve deletar usuário com sucesso', async () => {
+    const response = await request(app)
+      .delete(`/api/v1/user/${userId}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(200);
+  });
+
+  it('Deve retornar que usuário que busca deletar já foi excluído', async () => {
+    const response = await request(app)
+      .delete(`/api/v1/user/${userId}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('Usuário já foi excluído');
+  });
+
+  /////////////////List Users Tests
+  it('Deve retornar uma lista de usuários com paginação', async () => {
+    const response = await request(app)
+      .get('/api/v1/user')
+      .set('Authorization', `Bearer ${token}`)
+      .query({ page: 1, pageSize: 2 });
+
+    expect(response.status).toBe(200);
+  });
+
+  it('Deve filtrar usuários pelo nome', async () => {
+    const response = await request(app)
+      .get('/api/v1/user')
+      .set('Authorization', `Bearer ${token}`)
+      .query({ name: 'Usuario' });
+
+    expect(response.status).toBe(200);
+
+    const [user] = response.body.users;
+
+    expect(user.full_name).toBe('Usuario');
+  });
+
+  it('Deve retornar usuários deletados quando especificado', async () => {
+    const response = await request(app)
+      .get('/api/v1/user')
+      .set('Authorization', `Bearer ${token}`)
+      .query({ isDeleted: true });
+
+    expect(response.status).toBe(200);
+
+    const [user] = response.body.users;
+
+    expect(user.deletedAt).not.toBeNull();
+  });
 });

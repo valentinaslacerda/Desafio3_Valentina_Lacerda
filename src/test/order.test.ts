@@ -287,7 +287,46 @@ describe('Testa Serviços de Order', () => {
     });
   });
 
-  it('Deve deletar pedido com sucesso', () => {
-    
+  ////////////////Delete Order Test
+  it('Deve retornar erro ao tentar deletar um pedido que não está aberto', async () => {
+    const response = await request(app)
+      .delete(`/api/v1/order/${orderId}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      error: 'Apenas pedidos com status "Aberto" podem ser cancelados.',
+    });
+  });
+
+  it('Deve retornar que o pedido não foi encontrado quando ele não existe no banco.', async () => {
+    const response = await request(app)
+      .delete(`/api/v1/order/invalidId`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      error: 'Pedido não encontrado',
+    });
+  });
+
+  it('Deve deletar pedido com sucesso', async () => {
+    const order = {
+      clientId,
+      carId,
+    };
+
+    const res = await request(app)
+      .post(`/api/v1/order`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(order);
+
+    const id = res.body.id;
+
+    const response = await request(app)
+      .delete(`/api/v1/order/${id}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(200);
   });
 });
