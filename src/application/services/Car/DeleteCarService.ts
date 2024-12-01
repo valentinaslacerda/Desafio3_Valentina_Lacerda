@@ -10,8 +10,7 @@ export class DeleteCarService {
   public async execute(id: string): Promise<void> {
     const car = await this.CarsRepository.findById(id);
 
-    if (!car)
-      throw new Error("Carro não encontrado.");
+    if (!car) throw new Error('Carro não encontrado.');
 
     if (await this.OrderRepository.findOpenOrderByCarId(id))
       throw new Error("O carro não pode ser excluído pois tem pedidos em aberto.");

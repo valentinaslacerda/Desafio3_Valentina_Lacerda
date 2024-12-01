@@ -297,6 +297,8 @@ describe('Testes Para Client', () => {
     );
   });
 
+  ////////////List Client tests
+
   it('Deve retornar uma lista de clientes com paginação', async () => {
     const response = await request(app)
       .get('/api/v1/client')

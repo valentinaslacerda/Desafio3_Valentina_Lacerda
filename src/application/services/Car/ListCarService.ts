@@ -11,9 +11,7 @@ export interface IPaginateCar {
 }
 
 export class ListCarService {
-  constructor(
-    private CarsRepository: CarsRepository
-  ) { }
+  constructor(private CarsRepository: CarsRepository) {}
 
   public async execute(listParams: ListCarParams): Promise<IPaginateCar> {
     listParams.items = listParams.items?.slice(0, 5);
@@ -22,7 +20,10 @@ export class ListCarService {
 
     cars.data = (cars.data as Car[]).map((car: Car) => {
       const { items, deletedAt, ...info_car } = car;
-      const ret_car: IShowCar = { ...info_car, items: items.map(item => item.name) };
+      const ret_car: IShowCar = {
+        ...info_car,
+        items: items.map((item) => item.name),
+      };
       return ret_car;
     });
 
