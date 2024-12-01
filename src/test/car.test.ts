@@ -385,12 +385,10 @@ describe('Testa Serviços de Car', () => {
       carId: carID,
     };
 
-    const responseOrder = await request(app)
+    await request(app)
       .post(`/api/v1/order`)
       .set('Authorization', `Bearer ${token}`)
       .send(order);
-
-    console.log(`Response order: ${responseOrder}`);
 
     const response = await request(app)
       .delete(`/api/v1/car/${carID}`)
