@@ -1,2 +1,6 @@
 node_modules
 .env
+test.env
+coverage
+jest.config.js
+dist

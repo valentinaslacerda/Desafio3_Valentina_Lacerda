@@ -4,6 +4,7 @@ import tseslint from '@typescript-eslint/eslint-plugin';
 import parser from '@typescript-eslint/parser';
 import prettier from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
+import jestPlugin from 'eslint-plugin-jest';
 
 export default [
   {
@@ -14,11 +15,15 @@ export default [
         ecmaVersion: 'latest',
         sourceType: 'module',
       },
-      globals: globals.node,
+      globals: {
+        ...globals.node,
+        ...globals.jest,
+      },
     },
     plugins: {
       '@typescript-eslint': tseslint,
       prettier: prettier,
+      jest: jestPlugin,
     },
     rules: {
       ...tseslint.configs.recommended.rules,
@@ -29,6 +34,7 @@ export default [
       ],
       'linebreak-style': ['error', 'unix'],
       'prettier/prettier': ['error', { endOfLine: 'auto' }],
+      ...jestPlugin.configs.recommended.rules,
     },
   },
 

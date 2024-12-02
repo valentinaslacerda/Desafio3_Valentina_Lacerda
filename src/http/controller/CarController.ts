@@ -23,8 +23,7 @@ class CarController {
       });
 
       return res.status(201).json({ id: car.id });
-    }
-    catch (err) {
+    } catch (err) {
       if (err instanceof Error)
         return res.status(400).json({ error: err.message });
 
