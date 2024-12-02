@@ -15,7 +15,7 @@ AppDataSource.initialize().then(() => {
   app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
   app.use('/api/v1/', routes);
-
+  console.log(`Passou`);
   app.listen(process.env.PORT, () => {
     console.log(`Server started on port ${process.env.PORT}`);
   });
