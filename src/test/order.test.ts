@@ -329,4 +329,90 @@ describe('Testa Serviços de Order', () => {
 
     expect(response.status).toBe(200);
   });
+
+  ////////////List Client tests
+
+  it('Deve retornar uma lista de pedidos com paginação', async () => {
+    const response = await request(app)
+      .get('/api/v1/order')
+      .set('Authorization', `Bearer ${token}`)
+      .query({ page: 1, pageSize: 2 });
+
+    expect(response.status).toBe(200);
+  });
+
+  it('Deve filtrar pedidos pelo cpf', async () => {
+    const carData = {
+      plate: generatePlate(true),
+      brand: 'Toyota',
+      model: 'Audi',
+      km: 20000,
+      year: 2023,
+      price: 100000,
+      status: 'ativo',
+      items: ['Airbag', 'ABS'],
+    };
+
+    const responseCar = await request(app)
+      .post('/api/v1/car')
+      .set('Authorization', `Bearer ${token}`)
+      .send(carData);
+
+    const carId = responseCar.body.id;
+
+    const clientData = {
+      name: 'Alice',
+      birthday: '2000-01-01',
+      cpf: generateValidCPF(),
+      email: generateValidEmail(),
+      phone: '1234567890',
+    };
+
+    const responseClient = await request(app)
+      .post('/api/v1/client')
+      .set('Authorization', `Bearer ${token}`)
+      .send(clientData);
+
+    const clientId = responseClient.body.id;
+    const clientCPF = responseClient.body.cpf;
+
+    const orderData = {
+      clientId,
+      carId,
+    };
+
+    await request(app)
+      .post('/api/v1/order')
+      .set('Authorization', `Bearer ${token}`)
+      .send(orderData);
+
+    const response = await request(app)
+      .get(`/api/v1/order`)
+      .set('Authorization', `Bearer ${token}`)
+      .query({ clientCpf: clientCPF });
+
+    expect(response.status).toBe(200);
+    expect(response.body.orders).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          client: expect.objectContaining({
+            id: `${clientId}`,
+          }),
+        }),
+      ])
+    );
+  });
+
+  it('Deve retornar pedidos deletados quando especificado', async () => {
+    const response = await request(app)
+      .get('/api/v1/order')
+      .set('Authorization', `Bearer ${token}`)
+      .query({ status: 'Cancelado' });
+
+    expect(response.status).toBe(200);
+
+    const [orderCar] = response.body.orders;
+
+    expect(orderCar.status).toBe('Cancelado');
+  });
 });
