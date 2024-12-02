@@ -17,7 +17,6 @@ export class CreateCarService {
     status,
     items,
   }: CreateCarDTO): Promise<Car> {
-
     // Required fields
     const data = [plate, brand, model, km, year, price, status, items];
     const data_names = ["placa", "marca", "modelo", "quilometragem", "ano", "preço", "status", "items"];

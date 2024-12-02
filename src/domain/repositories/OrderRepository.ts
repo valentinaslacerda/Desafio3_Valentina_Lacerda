@@ -45,9 +45,7 @@ export class OrderRepository {
   }
 
   // find open orders with a car
-  public async findOpenOrderByCarId(
-    carId: string
-  ): Promise<Order | null> {
+  public async findOpenOrderByCarId(carId: string): Promise<Order | null> {
     const order = await this.repository.findOne({
       where: { car: { id: carId }, status: 'Aberto' },
       relations: ['client', 'car'],
