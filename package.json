@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "test:run": "set NODE_ENV=test && jest --coverage",
+    "test:run": "jest --coverage",
     "dev": "npm run services:up && nodemon --exec ts-node ./src/index.ts",
-    "test": "cross-env NODE_ENV=test npm run services:up && nodemon --exec ts-node ./src/index.ts",
+    "test": "npm run services:up && nodemon --exec ts-node ./src/index.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write 'src/**/*.{ts,js,json,md}'",
@@ -17,8 +17,8 @@
     "typeorm:sync": "npm run typeorm schema:sync -- -d ./src/infra/data-source.ts",
     "typeorm:drop": "npm run typeorm schema:drop -- -d ./src/infra/data-source.ts",
     "typeorm:reset": "npm run typeorm:drop && npm run typeorm:sync",
-    "typeorm:migrate": "env NODE_ENV=development npm run typeorm migration:generate -- -n",
-    "typeorm:create": "env NODE_ENV=development npm run typeorm migration:create -- -n",
+    "typeorm:migrate": "npm run typeorm migration:generate -- -n",
+    "typeorm:create": "npm run typeorm migration:create -- -n",
     "typeorm:run": "ts-node -r tsconfig-paths/register $(yarn bin typeorm) migration:run",
     "migration:run": "npm run typeorm migration:run -- -d ./src/infra/data-source.ts",
     "seed:run": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d ./src/infra/data-source.ts"
