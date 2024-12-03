@@ -1,7 +1,11 @@
 import request from 'supertest';
 import app from '../index';
 import { AppDataSource } from '../infra/data-source';
-import { generatePlate, generateValidCPF, generateValidEmail } from './utils';
+import {
+  generatePlate,
+  generateValidCPF,
+  generateValidEmail,
+} from './utils/utils';
 import { CreateCarDTO } from '../http/dtos/CreateCar.dto';
 
 let token: string;

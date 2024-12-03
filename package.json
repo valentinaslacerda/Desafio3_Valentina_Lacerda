@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "test:run": "jest --coverage",
+    "test:run": "jest --runInBand",
     "dev": "nodemon --exec ts-node ./src/index.ts",
     "test": "npm run services:up && nodemon --exec ts-node ./src/index.ts",
     "lint": "eslint .",

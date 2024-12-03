@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../index';
 import { AppDataSource } from '../infra/data-source';
-import { generateValidCPF, generateValidEmail } from './utils';
+import { generateValidCPF, generateValidEmail } from './utils/utils';
 
 let token: string;
 let clientId: string;
