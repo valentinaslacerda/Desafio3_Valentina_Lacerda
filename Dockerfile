@@ -1,9 +1,5 @@
 FROM node:20
-
-COPY . /home/node/app/
-
-RUN chmod +x /home/node/app/entrypoint.sh 
-
-ENTRYPOINT ["/home/node/app/entrypoint.sh"]
-
-CMD [ "npm", "run", "dev" ]
+WORKDIR app
+COPY . .
+RUN npm install
+CMD ["sh", "-c", "npx -y wait-on tcp:mysql:3306 && npm run migration:run && npm run seed:run && npm run test:run"]

@@ -6,9 +6,7 @@ services:
     env_file:
       - ./.env
     ports:
-      - '${MYSQL_PORT:-3306}:3306'
-    networks:
-      - app_network
+      - '3306:3306'
 
   app:
     build: .
@@ -20,9 +18,3 @@ services:
       - ./.env
     depends_on:
       - mysql
-    networks:
-      - app_network
-
-networks:
-  app_network:
-    driver: bridge
